@@ -19,6 +19,7 @@ pytest-cov = "^4.0.0"
 mypy = "^1.5.1"
 pre-commit = "^3.4.0"
 tox = "^4.11.1"
+types-requests = "^2.31.0.20240125"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.4.2"
@@ -38,13 +39,14 @@ check_untyped_defs = "True"
 warn_return_any = "True"
 warn_unused_ignores = "True"
 show_error_codes = "True"
+attr_defined = "False"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.ruff]
 target-version = "py37"
-line-length = 120
+line-length = 80
 fix = true
 select = [
     # flake8-2020
@@ -83,6 +85,8 @@ ignore = [
     "E501",
     # DoNotAssignLambda
     "E731",
+    # Ternary
+    "SIM108",
 ]
 
 [tool.ruff.format]
