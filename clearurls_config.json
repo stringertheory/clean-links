@@ -1,0 +1,25 @@
+{
+  "providers": {
+    "globalRules": {
+      "rules": [
+	"(?:%3F)?utm_(.*)?"
+      ]
+    },
+    "wired.com": {
+      "rules": [
+	"mbid"
+      ]
+    },
+    "google": {
+      "rules": [
+	"iflsig"
+      ]
+    },
+    "bloomberg": {
+      "urlPattern": "^https?:\\/\\/(?:[a-z0-9-]+\\.)*?bloomberg\\.com",
+      "rules": [
+	"cmpid="
+      ]
+    }
+  }
+}
