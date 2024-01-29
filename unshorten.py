@@ -8,11 +8,11 @@ __packagename__ = 'CleanLinks'
 __version__ = "0.01"
 __url__ = "https://github.com/stringertheory/clean-links"
 
+USER_AGENT = f"{__packagename__}/{__version__} ({__url__})"
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
-USER_AGENT = f"{__packagename__}/{__version__} ({__url__})"
 HEADERS = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     "accept-encoding": "gzip, deflate, br",
