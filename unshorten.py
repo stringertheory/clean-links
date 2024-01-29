@@ -1,6 +1,4 @@
 import requests
-from urllib.parse import urlsplit
-
 from urllib3.exceptions import InsecureRequestWarning
 
 # suppress warning about that's given when using verify=False
@@ -32,8 +30,8 @@ def get_last_url_from_exception(exc):
             result = exc.request.url
     except Exception:
         pass
-    finally:
-        return result
+
+    return result
 
 
 def unshorten_url(url, timeout=9, verify=False, headers=HEADERS):
@@ -62,7 +60,7 @@ def unshorten_url(url, timeout=9, verify=False, headers=HEADERS):
             }
 
 
-if __name__ == "__main__":
+def main():
     url = "https://trib.al/5m7fAg3"
     url = "https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years?cmpid%3D=socialflow-twitter-tech&utm_content=tech&utm_medium=social&utm_campaign=socialflow-organic&utm_source=twitter"
     url = "https://tinyurl.com/yc2ft9m5"
@@ -71,3 +69,7 @@ if __name__ == "__main__":
     url = "https://hubs.la/Q01HRjhm0"
 
     print(unshorten_url(url))
+
+
+if __name__ == "__main__":
+    main()
