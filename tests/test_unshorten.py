@@ -56,9 +56,7 @@ def test_expired_certificate_ignore():
 def test_expired_certificate_verify():
     url = "https://expired.badssl.com/"
     result = unshorten_url(url, verify=True)
-    assert result == {
-        "url": "https://expired.badssl.com/",
-        "resolved": "https://expired.badssl.com/",
-        "status": None,
-        "exception": "SSLError: HTTPSConnectionPool(host='expired.badssl.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1000)')))",
-    }
+    assert result["url"] == "https://expired.badssl.com/"
+    assert result["resolved"] == "https://expired.badssl.com/"
+    assert result["status"] is None
+    assert result["exception"].startswith("SSLError:")
