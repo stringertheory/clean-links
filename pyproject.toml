@@ -39,7 +39,6 @@ check_untyped_defs = "True"
 warn_return_any = "True"
 warn_unused_ignores = "True"
 show_error_codes = "True"
-attr_defined = "False"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
