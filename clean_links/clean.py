@@ -46,7 +46,7 @@ def match_provider(provider: str, url: str, rules: dict) -> bool:
     return bool(match_url and not match_exception)
 
 
-def clear_url(
+def clean_url(
     url: str, keep_query: bool = True, keep_fragment: bool = True
 ) -> str:
     for provider_name, rules in clear_urls_rules["providers"].items():
@@ -89,7 +89,7 @@ def main() -> None:
     resolved = unshorten_url(url).get("resolved", "")
     print(resolved)
     print()
-    clear = clear_url(resolved)  # , keep_query=False, keep_fragment=False)
+    clear = clean_url(resolved)  # , keep_query=False, keep_fragment=False)
     print(clear)
     # print(url)
     # original, resolved, status = resolve_url(url, 10)

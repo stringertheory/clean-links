@@ -2,9 +2,9 @@ import json
 
 
 def read_config(
-    additional_config_filename: str = "clearurls_config.json"
+    additional_config_filename: str = "clean_links/clearurls_config.json"
 ) -> dict:
-    with open("clearurls.json") as infile:
+    with open("clean_links/clearurls.json") as infile:
         clear_urls_rules = dict(json.load(infile))
 
     with open(additional_config_filename) as infile:

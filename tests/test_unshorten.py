@@ -32,7 +32,6 @@ def test_single_redirect():
 def test_multiple_redirect():
     url = "https://hubs.la/Q01HRjhm0"
     result = unshorten_url(url)
-    print(result)
     assert result == {
         "url": url,
         "resolved": "https://app.east.mentorspaces.com/#!/orgs/6aab4989-2bd1-7ec9-6e3f-56f3128815c8/?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094&_branch_match_id=1280732352261121106&utm_campaign=fall-recruiting&_branch_referrer=H4sIAAAAAAAAAx3KUQqEIBAA0Nv0V1rYsgXSUcJmB5R0FGek61f7%2B3hepPCqVEKSXLk4QB5cKUMMdCriA7cmaYdM8gw7mcnMetaf7tWEv9CS5QzBxb9wbhXQyhVEsHaeeQfviDA%2B1o9fMy56MTdcnGABdQAAAA%3D%3D",
