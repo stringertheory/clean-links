@@ -1,0 +1,299 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://hubs.la/Q01HRjhm0
+    response:
+      body:
+        string: ""
+      headers:
+        Access-Control-Allow-Credentials:
+          - "false"
+        CF-Cache-Status:
+          - DYNAMIC
+        CF-RAY:
+          - 84d6f0b50f206393-ORD
+        Connection:
+          - keep-alive
+        Date:
+          - Tue, 30 Jan 2024 04:23:34 GMT
+        Link:
+          - <https://mentorspaces.app.link/nsbe?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094>;
+            rel="canonical"
+        Location:
+          - https://mentorspaces.app.link/nsbe?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094
+        Referrer-Policy:
+          - no-referrer
+        Server:
+          - cloudflare
+        Vary:
+          - origin
+        X-Content-Type-Options:
+          - nosniff
+        X-HubSpot-Correlation-Id:
+          - 0f11f8fe-984c-4510-8384-f4b117ac780c
+        X-Robots-Tag:
+          - none
+        X-Trace:
+          - 2B4B95449922E05BAEBB051211B2D06A4276390186000000000000000000
+        x-envoy-upstream-service-time:
+          - "13"
+        x-evy-trace-listener:
+          - listener_https
+        x-evy-trace-route-configuration:
+          - listener_https/all
+        x-evy-trace-route-service-name:
+          - envoyset-translator
+        x-evy-trace-served-by-pod:
+          - iad02/etsu-td/envoy-proxy-67d684b55d-k8h6x
+        x-evy-trace-virtual-host:
+          - all
+        x-request-id:
+          - 0f11f8fe-984c-4510-8384-f4b117ac780c
+      status:
+        code: 301
+        message: Moved Permanently
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://mentorspaces.app.link/nsbe?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094
+    response:
+      body:
+        string: ""
+      headers:
+        Accept-CH:
+          - Sec-CH-UA-Platform-Version,Sec-CH-UA-Model
+        Connection:
+          - keep-alive
+        Content-Security-Policy:
+          - frame-ancestors 'self'
+        Date:
+          - Tue, 30 Jan 2024 04:23:34 GMT
+        Last-Modified:
+          - Tue, 30 Jan 2024 04:23:34 GMT
+        Location:
+          - https://app.east.mentorspaces.com/orgs/6aab4989-2bd1-7ec9-6e3f-56f3128815c8/?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094&_branch_match_id=1280732352261121106&utm_campaign=fall-recruiting&_branch_referrer=H4sIAAAAAAAAAx3KUQqEIBAA0Nv0V1rYsgXSUcJmB5R0FGek61f7%2B3hepPCqVEKSXLk4QB5cKUMMdCriA7cmaYdM8gw7mcnMetaf7tWEv9CS5QzBxb9wbhXQyhVEsHaeeQfviDA%2B1o9fMy56MTdcnGABdQAAAA%3D%3D
+        Server:
+          - openresty
+        Set-Cookie:
+          - _s=XIMPxnSyu9DLKLzSRfWyPfrBEPwU3El1DWID4MIk1TMrDIhaWEdqzkU%2BkI1HCxOY; Max-Age=31536000;
+            Domain=.app.link; Path=/; Expires=Wed, 29 Jan 2025 04:23:34 GMT; Secure; SameSite=None
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubDomains
+        Via:
+          - 1.1 3e15e20983f10122d7332649559a0f8c.cloudfront.net (CloudFront)
+        X-Amz-Cf-Id:
+          - 2pY7mzBoNPtglxRcNToNzHS9wa0ID5GErt08YcHQp_6-mAW5VX0-GA==
+        X-Amz-Cf-Pop:
+          - ORD58-P6
+        X-Cache:
+          - Miss from cloudfront
+      status:
+        code: 307
+        message: Temporary Redirect
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://app.east.mentorspaces.com/orgs/6aab4989-2bd1-7ec9-6e3f-56f3128815c8/?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094&_branch_match_id=1280732352261121106&utm_campaign=fall-recruiting&_branch_referrer=H4sIAAAAAAAAAx3KUQqEIBAA0Nv0V1rYsgXSUcJmB5R0FGek61f7%2B3hepPCqVEKSXLk4QB5cKUMMdCriA7cmaYdM8gw7mcnMetaf7tWEv9CS5QzBxb9wbhXQyhVEsHaeeQfviDA%2B1o9fMy56MTdcnGABdQAAAA%3D%3D
+    response:
+      body:
+        string: ""
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "0"
+        Date:
+          - Tue, 30 Jan 2024 04:23:35 GMT
+        Location:
+          - http://app.east.mentorspaces.com/#!/orgs/6aab4989-2bd1-7ec9-6e3f-56f3128815c8/?utm_content=242450506&utm_medium=social&utm_source=twitter&hss_channel=tw-18419094&_branch_match_id=1280732352261121106&utm_campaign=fall-recruiting&_branch_referrer=H4sIAAAAAAAAAx3KUQqEIBAA0Nv0V1rYsgXSUcJmB5R0FGek61f7%2B3hepPCqVEKSXLk4QB5cKUMMdCriA7cmaYdM8gw7mcnMetaf7tWEv9CS5QzBxb9wbhXQyhVEsHaeeQfviDA%2B1o9fMy56MTdcnGABdQAAAA%3D%3D
+        Server:
+          - AmazonS3
+        Via:
+          - 1.1 57827d2e1d333a2c5c0e53aa1e31a894.cloudfront.net (CloudFront)
+        X-Amz-Cf-Id:
+          - 7himOeBR7uANgNOMKZrV2uqCEwl8vDGgHlLfbymbKNsRPP8mJSWjMA==
+        X-Amz-Cf-Pop:
+          - ORD52-C3
+        X-Cache:
+          - Miss from cloudfront
+      status:
+        code: 301
+        message: Moved Permanently
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: http://app.east.mentorspaces.com/
+    response:
+      body:
+        string: ""
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "167"
+        Content-Type:
+          - text/html
+        Date:
+          - Tue, 30 Jan 2024 04:23:34 GMT
+        Location:
+          - https://app.east.mentorspaces.com/
+        Server:
+          - CloudFront
+        Via:
+          - 1.1 86a7498e5425c76e685d819606be5838.cloudfront.net (CloudFront)
+        X-Amz-Cf-Id:
+          - afZ7soUdg-E4FXBUhGBgIAHGi_63uRU4eWhhKoU59DmDu1PzF4sHZw==
+        X-Amz-Cf-Pop:
+          - ORD52-C3
+        X-Cache:
+          - Redirect from cloudfront
+      status:
+        code: 301
+        message: Moved Permanently
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://app.east.mentorspaces.com/
+    response:
+      body:
+        string: ""
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "2851"
+        Content-Type:
+          - text/html
+        Date:
+          - Tue, 30 Jan 2024 04:23:35 GMT
+        ETag:
+          - '"fc696eb13d0529be223df73e7324d5aa"'
+        Last-Modified:
+          - Fri, 26 Jan 2024 13:17:10 GMT
+        Server:
+          - AmazonS3
+        Via:
+          - 1.1 060d1d4202fff21bc3e6249da337fee6.cloudfront.net (CloudFront)
+        X-Amz-Cf-Id:
+          - HZN6GYowGIxbHyGDhjkl1mwdsLHrxHQpHW2VY9xfs9hpugw4kEi0xA==
+        X-Amz-Cf-Pop:
+          - ORD52-C3
+        X-Cache:
+          - RefreshHit from cloudfront
+        x-amz-version-id:
+          - WfqvOrWIbc9ePCZoz9Y369.12oi42BSa
+      status:
+        code: 200
+        message: OK
+version: 1

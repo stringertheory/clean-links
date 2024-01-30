@@ -1,0 +1,143 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://trib.al/5m7fAg3
+    response:
+      body:
+        string: ""
+      headers:
+        Cache-Control:
+          - private, max-age=0, no-cache
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "541"
+        Content-Type:
+          - text/html;charset=utf-8
+        Date:
+          - Tue, 30 Jan 2024 04:21:30 GMT
+        Location:
+          - https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years?cmpid%3D=socialflow-twitter-tech&utm_content=tech&utm_medium=social&utm_campaign=socialflow-organic&utm_source=twitter
+        Server:
+          - CherryPy/7.1.0
+        Set-Cookie:
+          - t="Ug2j+tptRt61I0yolUMEhw=="; Domain=.trib.al; expires=Fri, 06 Jan 2034 23:13:40
+            GMT; Path=/; SameSite=None; secure; Version=2
+          - tribal="kTiZHLrNR0KxRujBcBOvXw=="; expires=Fri, 06 Jan 2034 23:13:40 GMT;
+            Path=/; Version=2
+      status:
+        code: 301
+        message: Moved Permanently
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years?cmpid%3D=socialflow-twitter-tech&utm_content=tech&utm_medium=social&utm_campaign=socialflow-organic&utm_source=twitter
+    response:
+      body:
+        string: ""
+      headers:
+        Accept-Ranges:
+          - bytes
+        Age:
+          - "0"
+        Cache-Control:
+          - public, max-age=120
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "95053"
+        Content-Type:
+          - text/html; charset=utf-8
+        Date:
+          - Tue, 30 Jan 2024 04:21:31 GMT
+        Fastly-Restarts:
+          - "1"
+        Link:
+          - "<https://assets.bwbx.io>; rel=preconnect; crossorigin, <https://assets.bwbx.io>;
+            rel=preconnect, <https://sourcepointcmp.bloomberg.com>; rel=preconnect; crossorigin,
+            <https://tpc.googlesyndication.com\t>; rel=preconnect; crossorigin, <https://www.google-analytics.com>;
+            rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect,
+            <https://www.googletagmanager.com>; rel=preconnect; crossorigin"
+        Permissions-Policy:
+          - join-ad-interest-group=(), run-ad-auction=(), browsing-topics=()
+        Server:
+          - openresty
+        Set-Cookie:
+          - seen_uk=1; domain=bloomberg.com; path=/;
+          - "table: 0x7fa1061212e0"
+          - _pxhd=qp-8xwDj613RBayEnzrhlnAOGBFgLcLg6BYoiccxE8nUkiqhC7nznaDYjd88xpUxJNYUWzGVWk0PJSyY2XcNSQ==:X5cm/-YF9XF8iCE-VcTfXP/lF/y7w/gGAj7Hb/B2U8ek7u0XvU5QLq2nRc2tOLPqiQ/W1oOM0/7uU-mnUBaQfQtCrm-53mkfW5H33jLVxcw=;
+            Expires=Fri, 01 Jan 2021 00:00:00 GMT; path=/;
+        Strict-Transport-Security:
+          - max-age=31557600
+        Vary:
+          - Accept-Encoding, Accept-Encoding
+        X-Cache:
+          - MISS
+        X-Cache-Hits:
+          - "0"
+        X-Content-Type-Options:
+          - nosniff
+        X-Served-By:
+          - cache-chi-kigq8000167-CHI
+        alt-svc:
+          - h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+        content-encoding:
+          - gzip
+        content-security-policy:
+          - frame-ancestors 'self' http://*.bloomberg.com https://*.bloomberg.com
+          - upgrade-insecure-requests
+        etag:
+          - '"p3k15jguqwcuxm"'
+        referrer-policy:
+          - no-referrer-when-downgrade
+        x-powered-by:
+          - Express
+      status:
+        code: 200
+        message: OK
+version: 1

@@ -1,0 +1,59 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Connection:
+          - keep-alive
+        accept:
+          - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        accept-encoding:
+          - gzip, deflate, br
+        accept-language:
+          - en-US,en;q=0.9
+        sec-fetch-dest:
+          - document
+        sec-fetch-mode:
+          - navigate
+        sec-fetch-site:
+          - same-origin
+        sec-fetch-user:
+          - ?1
+        upgrade-insecure-requests:
+          - "1"
+        user-agent:
+          - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+            like Gecko) Chrome/120.0.0.0 Safari/537.36
+      method: HEAD
+      uri: https://example.com/
+    response:
+      body:
+        string: ""
+      headers:
+        Accept-Ranges:
+          - bytes
+        Age:
+          - "404635"
+        Cache-Control:
+          - max-age=604800
+        Content-Encoding:
+          - gzip
+        Content-Length:
+          - "648"
+        Content-Type:
+          - text/html; charset=UTF-8
+        Date:
+          - Tue, 30 Jan 2024 04:12:34 GMT
+        Etag:
+          - '"3147526947"'
+        Expires:
+          - Tue, 06 Feb 2024 04:12:34 GMT
+        Last-Modified:
+          - Thu, 17 Oct 2019 07:18:26 GMT
+        Server:
+          - ECS (cha/80E6)
+        X-Cache:
+          - HIT
+      status:
+        code: 200
+        message: OK
+version: 1

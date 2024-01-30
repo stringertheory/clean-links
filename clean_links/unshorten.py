@@ -1,17 +1,14 @@
+import contextlib
 import logging
-from typing import Union
+import warnings
+from typing import Generator, Union
 
 import requests
-from urllib3.exceptions import InsecureRequestWarning
+import urllib3
 
-# suppress warning about that's given when using verify=False
-requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+from clean_links import __version__
 
-__packagename__ = "CleanLinks"
-__version__ = "0.01"
-__url__ = "https://github.com/stringertheory/clean-links"
-
-USER_AGENT = f"{__packagename__}/{__version__} ({__url__})"
+USER_AGENT = f"clean-links/{__version__}"
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -27,6 +24,13 @@ HEADERS = {
     "upgrade-insecure-requests": "1",
     "user-agent": USER_AGENT,
 }
+
+
+@contextlib.contextmanager
+def disable_ssl_warnings() -> Generator:
+    with warnings.catch_warnings():
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        yield None
 
 
 def get_last_url_from_exception(exc: Exception) -> Union[str, None]:
@@ -46,7 +50,7 @@ def get_last_url_from_exception(exc: Exception) -> Union[str, None]:
 def unshorten_url(
     url: str, timeout: int = 9, verify: bool = False, headers: dict = HEADERS
 ) -> dict:
-    with requests.Session() as session:
+    with requests.Session() as session, disable_ssl_warnings():
         try:
             response = session.head(
                 url,
@@ -78,8 +82,9 @@ def main() -> None:
     url = "https://bit.ly/3C4WXQ9"
     # url = 'https://tinyurl.com/NewwAlemAndKibrom'
     url = "https://hubs.la/Q01HRjhm0"
+    url = "https://expired.badssl.com/"
 
-    print(unshorten_url(url))
+    print(unshorten_url(url, verify=True))
 
 
 if __name__ == "__main__":
