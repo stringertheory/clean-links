@@ -77,7 +77,7 @@ def main() -> None:
     url = "https://trib.al/5m7fAg3"
     # url = "https://tinyurl.com/yc2ft9m5"
     # url = "https://bit.ly/3C4WXQ9"
-    # url = 'https://tinyurl.com/NewwAlemAndKibrom'
+    url = "https://tinyurl.com/NewwAlemAndKibrom"
     # url = "https://hubs.la/Q01HRjhm0"
     # url = "https://buff.ly/3Omwkwd"
     # url = "https://bit.ly/48RtRlw"

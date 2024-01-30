@@ -59,7 +59,23 @@ def unshorten_url(
                 headers=headers,
                 verify=verify,
             )
-        except Exception as exc:
+        except requests.exceptions.MissingSchema:
+            raise
+        except requests.exceptions.InvalidURL:
+            raise
+        except requests.exceptions.InvalidSchema as exc:
+            msg = str(exc)
+            if msg.startswith("No connection adapters were found"):
+                resolved = msg[39:-1]
+                return {
+                    "url": url,
+                    "resolved": resolved,
+                    "status": None,
+                    "exception": f"{type(exc).__name__}: {exc}",
+                }
+            else:
+                raise
+        except requests.exceptions.RequestException as exc:
             return {
                 "url": url,
                 "resolved": get_last_url_from_exception(exc),
@@ -83,6 +99,7 @@ def main() -> None:
     # url = 'https://tinyurl.com/NewwAlemAndKibrom'
     url = "https://hubs.la/Q01HRjhm0"
     url = "https://expired.badssl.com/"
+    url = "https://tinyurl.com/NewwAlemAndKibrom"
 
     print(unshorten_url(url, verify=True))
 
