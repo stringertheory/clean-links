@@ -57,7 +57,6 @@ def test_expired_certificate_ignore():
 def test_resolve_to_mailto():
     url = "https://tinyurl.com/NewwAlemAndKibrom"
     result = unshorten_url(url)
-    print(result)
     assert result["url"] == url
     assert (
         result["resolved"]
@@ -70,7 +69,6 @@ def test_resolve_to_mailto():
     )
 
 
-# @pytest.mark.vcr
 def test_missing_schema():
     url = "I AM NOT AN URL"
     with pytest.raises(requests.exceptions.MissingSchema):
