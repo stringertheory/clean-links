@@ -12,14 +12,14 @@ def query_string(url: str, rules: list) -> str:
     split = urlsplit(url)
     params = parse_qs(split.query)
 
-    delete_keys = {None, ""}
+    delete_keys = {""}
     for rule in rules:
         for key in params:
             if re.match("^" + rule + "$", key, flags=re.IGNORECASE):
                 delete_keys.add(key)
 
     for delete_key in delete_keys:
-        params.pop(delete_key, "")  # type: ignore[arg-type]
+        params.pop(delete_key, None)
 
     params_string = urlencode(params, doseq=True)
 

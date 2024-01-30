@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 
 import requests
 from urllib3.exceptions import InsecureRequestWarning
@@ -28,7 +29,7 @@ HEADERS = {
 }
 
 
-def get_last_url_from_exception(exc: Exception) -> str | None:
+def get_last_url_from_exception(exc: Exception) -> Union[str, None]:
     result = None
 
     try:
