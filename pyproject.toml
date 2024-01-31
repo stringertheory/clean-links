@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clean_links"
-version = "0.0.1"
+version = "0.0.4"
 description = "Tools for cleaning up links"
 authors = ["Mike Stringer <mike.stringer.internet@gmail.com>"]
 repository = "https://github.com/stringertheory/clean-links"
@@ -21,11 +21,36 @@ pre-commit = "^3.4.0"
 tox = "^4.11.1"
 types-requests = "^2.31.0.20240125"
 pytest-recording = "^0.13.1"
+bump-my-version = "^0.17.3"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.4.2"
 mkdocs-material = "^9.2.7"
 mkdocstrings = {extras = ["python"], version = "^0.23.0"}
+
+
+[tool.bumpversion]
+current_version = "0.0.4"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_version = false
+tag = false
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+allow_dirty = true
+commit = false
+message = "Bump version: {current_version} → {new_version}"
+commit_args = "--no-verify"
+
+[[tool.bumpversion.files]]
+filename = "clean_links/__init__.py"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
