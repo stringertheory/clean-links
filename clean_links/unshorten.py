@@ -73,7 +73,7 @@ def request_redirect_chain(
     # send and follow the redirect chain, filling in the history
     next_prepped = send(session, prepped, history, verify, timeout)
     while next_prepped:
-        next_prepped = send(session, prepped, history, verify, timeout)
+        next_prepped = send(session, next_prepped, history, verify, timeout)
 
     return history
 

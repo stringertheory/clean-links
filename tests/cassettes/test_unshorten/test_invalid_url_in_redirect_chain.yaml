@@ -1,0 +1,100 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - keep-alive
+      accept:
+      - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+      accept-encoding:
+      - gzip, deflate, br
+      accept-language:
+      - en-US,en;q=0.9
+      sec-fetch-dest:
+      - document
+      sec-fetch-mode:
+      - navigate
+      sec-fetch-site:
+      - same-origin
+      sec-fetch-user:
+      - ?1
+      upgrade-insecure-requests:
+      - '1'
+      user-agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+        like Gecko) Chrome/120.0.0.0 Safari/537.36
+    method: HEAD
+    uri: https://ctt.ec/5kum7+
+  response:
+    body:
+      string: ''
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '193'
+      Content-Type:
+      - text/html
+      Date:
+      - Wed, 31 Jan 2024 04:50:01 GMT
+      Location:
+      - https://clicktotweet.com/5kum7+
+      Server:
+      - nginx/1.4.6 (Ubuntu)
+    status:
+      code: 301
+      message: Moved Permanently
+- request:
+    body: null
+    headers:
+      Connection:
+      - keep-alive
+      accept:
+      - text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+      accept-encoding:
+      - gzip, deflate, br
+      accept-language:
+      - en-US,en;q=0.9
+      sec-fetch-dest:
+      - document
+      sec-fetch-mode:
+      - navigate
+      sec-fetch-site:
+      - same-origin
+      sec-fetch-user:
+      - ?1
+      upgrade-insecure-requests:
+      - '1'
+      user-agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+        like Gecko) Chrome/120.0.0.0 Safari/537.36
+    method: HEAD
+    uri: https://clicktotweet.com/5kum7+
+  response:
+    body:
+      string: ''
+    headers:
+      Cache-Control:
+      - no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html
+      Date:
+      - Wed, 31 Jan 2024 04:50:01 GMT
+      Expires:
+      - Thu, 19 Nov 1981 08:52:00 GMT
+      Location:
+      - http://
+      Pragma:
+      - no-cache
+      Server:
+      - nginx/1.4.6 (Ubuntu)
+      Set-Cookie:
+      - PHPSESSID=cnvb41rlbi9f7u1l92fu3abio0; path=/
+      X-Powered-By:
+      - PHP/5.5.9-1ubuntu4.29
+    status:
+      code: 302
+      message: Found
+version: 1
