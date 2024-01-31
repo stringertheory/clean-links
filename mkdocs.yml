@@ -1,11 +1,11 @@
 site_name: clean-links
 repo_url: https://github.com/stringertheory/clean-links
 site_url: https://stringertheory.github.io/clean-links
-site_description: Tools for cleaning up linkss
+site_description: Tools for cleaning up links
 site_author: Mike Stringer
 edit_uri: edit/main/docs/
 repo_name: stringertheory/clean-links
-copyright: Maintained by <a href="https://stringertheory.com">Florian</a>.
+copyright: Maintained by <a href="https://github.com/stringertheory">Mike</a>.
 
 nav:
   - Home: index.md

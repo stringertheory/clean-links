@@ -5,4 +5,4 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/stringertheory/clean-links)](https://img.shields.io/github/commit-activity/m/stringertheory/clean-links)
 [![License](https://img.shields.io/github/license/stringertheory/clean-links)](https://img.shields.io/github/license/stringertheory/clean-links)
 
-Tools for cleaning up linkss
+Tools for cleaning up links.
