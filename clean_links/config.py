@@ -1,14 +1,15 @@
 import json
+import pkgutil
 
 
 def read_config(
-    additional_config_filename: str = "clean_links/clearurls_config.json"
+    additional_config_filename: str = "clearurls_config.json",
 ) -> dict:
-    with open("clean_links/clearurls.json") as infile:
-        clear_urls_rules = dict(json.load(infile))
+    data = pkgutil.get_data(__name__, "clearurls.json").decode("utf8")
+    clear_urls_rules = dict(json.loads(data))
 
-    with open(additional_config_filename) as infile:
-        additional_rules = json.load(infile)
+    data = pkgutil.get_data(__name__, additional_config_filename).decode("utf8")
+    additional_rules = dict(json.loads(data))
 
     for provider_name, rules in additional_rules["providers"].items():
         provider = clear_urls_rules["providers"].get(provider_name)
