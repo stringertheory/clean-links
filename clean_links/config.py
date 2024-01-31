@@ -2,14 +2,20 @@ import json
 import pkgutil
 
 
+def read_json(filename: str) -> dict:
+    data = pkgutil.get_data(__name__, filename)
+    if data is None:
+        msg = f"didn't find config file {filename}"
+        raise FileNotFoundError(msg)
+
+    return dict(json.loads(data.decode("utf8")))
+
+
 def read_config(
     additional_config_filename: str = "clearurls_config.json",
 ) -> dict:
-    data = pkgutil.get_data(__name__, "clearurls.json").decode("utf8")
-    clear_urls_rules = dict(json.loads(data))
-
-    data = pkgutil.get_data(__name__, additional_config_filename).decode("utf8")
-    additional_rules = dict(json.loads(data))
+    clear_urls_rules = read_json("clearurls.json")
+    additional_rules = read_json(additional_config_filename)
 
     for provider_name, rules in additional_rules["providers"].items():
         provider = clear_urls_rules["providers"].get(provider_name)
