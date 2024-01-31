@@ -109,20 +109,3 @@ def unshorten_url(
             "request_history": [r.url for r in history["requests"]],
             "response_history": [r.status_code for r in history["responses"]],
         }
-
-
-def main() -> None:
-    url = "https://trib.al/5m7fAg3"
-    url = "https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years?cmpid%3D=socialflow-twitter-tech&utm_content=tech&utm_medium=social&utm_campaign=socialflow-organic&utm_source=twitter"
-    url = "https://tinyurl.com/yc2ft9m5"
-    url = "https://bit.ly/3C4WXQ9"
-    # url = 'https://tinyurl.com/NewwAlemAndKibrom'
-    url = "https://hubs.la/Q01HRjhm0"
-    url = "https://expired.badssl.com/"
-    url = "https://tinyurl.com/NewwAlemAndKibrom"
-
-    print(unshorten_url(url, verify=True))
-
-
-if __name__ == "__main__":
-    main()

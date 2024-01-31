@@ -3,7 +3,6 @@ import re
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from clean_links.config import read_config
-from clean_links.unshorten import unshorten_url
 
 clear_urls_rules = read_config()
 
@@ -69,33 +68,3 @@ def clean_url(
             url = f"{split.scheme}://{split.netloc}{relative}"
 
     return url
-
-
-def main() -> None:
-    url = "https://www.amazon.com/Kobo-Glare-Free-Touchscreen-ComfortLight-Adjustable/dp/B0BCXLQNCC/ref=pd_ci_mcx_mh_mcx_views_0?pd_rd_w=Dx5dF&content-id=amzn1.sym.225b4624-972d-4629-9040-f1bf9923dd95%3Aamzn1.symc.40e6a10e-cbc4-4fa5-81e3-4435ff64d03b&pf_rd_p=225b4624-972d-4629-9040-f1bf9923dd95&pf_rd_r=A7JSDJGYR33BN5GRCV7V&pd_rd_wg=xW6Yf&pd_rd_r=4b8a3532-9e28-4857-a929-5e572d2c765f&pd_rd_i=B0BCXLQNCC"
-
-    url = "https://trib.al/5m7fAg3"
-    # url = "https://tinyurl.com/yc2ft9m5"
-    # url = "https://bit.ly/3C4WXQ9"
-    url = "https://tinyurl.com/NewwAlemAndKibrom"
-    # url = "https://hubs.la/Q01HRjhm0"
-    # url = "https://buff.ly/3Omwkwd"
-    # url = "https://bit.ly/48RtRlw"
-    # url = "https://srv.buysellads.com/ads/long/x/TCHU7KSHTTTTTTH6NPRNPTTTTTTFNZMBKWTTTTTTA4RZC7VTTTTTTBZI5HINWLB6G3DIEMS4PABU5AIEQQY6BADG2HUT"
-    # url = "https://buff.ly/2RjYjMt"
-
-    print(url)
-    print()
-    resolved = unshorten_url(url).get("resolved", "")
-    print(resolved)
-    print()
-    clear = clean_url(resolved)  # , keep_query=False, keep_fragment=False)
-    print(clear)
-    # print(url)
-    # original, resolved, status = resolve_url(url, 10)
-    # print(original)
-    # print(resolved)
-
-
-if __name__ == "__main__":
-    main()
