@@ -1,5 +1,4 @@
 import contextlib
-import logging
 import warnings
 from typing import Generator, Union
 
@@ -33,62 +32,83 @@ def disable_ssl_warnings() -> Generator:
         yield None
 
 
-def get_last_url_from_exception(exc: Exception) -> Union[str, None]:
-    result = None
-
+def send(
+    session: requests.Session,
+    prepped: requests.PreparedRequest,
+    history: dict,
+    verify: bool,
+    timeout: float,
+) -> Union[requests.PreparedRequest, None]:
+    history["requests"].append(prepped)
     try:
-        if exc.response and exc.response.url:
-            result = exc.response.url
-        elif exc.request:
-            result = exc.request.url
-    except Exception as exc:
-        logging.exception("exception occurred while getting last url")
+        response = session.send(
+            prepped, allow_redirects=False, verify=verify, timeout=timeout
+        )
+    except requests.exceptions.RequestException as exc:
+        exc.history = history
+        raise
+    else:
+        history["responses"].append(response)
 
-    return result
+    return response.next
+
+
+def request_redirect_chain(
+    session: requests.Session,
+    url: str,
+    verify: bool,
+    timeout: float,
+    headers: dict,
+    method: str = "HEAD",
+) -> dict:
+    history: dict = {
+        "requests": [],
+        "responses": [],
+    }
+
+    # prepare initial request
+    request = requests.Request(method, url, headers=headers)
+    prepped = session.prepare_request(request)
+
+    # send and follow the redirect chain, filling in the history
+    next_prepped = send(session, prepped, history, verify, timeout)
+    while next_prepped:
+        next_prepped = send(session, prepped, history, verify, timeout)
+
+    return history
+
+
+def format_exception(exc: Union[Exception, None]) -> Union[str, None]:
+    if exc is None:
+        return None
+    else:
+        return f"{type(exc).__name__}: {exc}"
 
 
 def unshorten_url(
-    url: str, timeout: int = 9, verify: bool = False, headers: dict = HEADERS
+    url: str, timeout: float = 9, verify: bool = False, headers: dict = HEADERS
 ) -> dict:
     with requests.Session() as session, disable_ssl_warnings():
+        exception = None
         try:
-            response = session.head(
-                url,
-                allow_redirects=True,
-                timeout=timeout,
-                headers=headers,
-                verify=verify,
+            history = request_redirect_chain(
+                session, url, verify, timeout, headers, "HEAD"
             )
-        except requests.exceptions.MissingSchema:
-            raise
-        except requests.exceptions.InvalidURL:
-            raise
-        except requests.exceptions.InvalidSchema as exc:
-            msg = str(exc)
-            if msg.startswith("No connection adapters were found"):
-                resolved = msg[39:-1]
-                return {
-                    "url": url,
-                    "resolved": resolved,
-                    "status": None,
-                    "exception": f"{type(exc).__name__}: {exc}",
-                }
-            else:
-                raise
         except requests.exceptions.RequestException as exc:
-            return {
-                "url": url,
-                "resolved": get_last_url_from_exception(exc),
-                "status": None,
-                "exception": f"{type(exc).__name__}: {exc}",
-            }
-        else:
-            return {
-                "url": url,
-                "resolved": response.url,
-                "status": response.status_code,
-                "exception": None,
-            }
+            exception = exc
+            history = getattr(exc, "history", {})
+            if not history or not history["responses"]:
+                raise
+
+        response = history["responses"][-1]
+        return {
+            "url": url,
+            "resolved": response.url,
+            "status": response.status_code,
+            "exception": format_exception(exception),
+            "request_history": [r.url for r in history["requests"]],
+            "response_history": [r.status_code for r in history["responses"]],
+        }
 
 
 def main() -> None:
