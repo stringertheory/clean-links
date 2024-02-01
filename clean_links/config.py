@@ -1,5 +1,7 @@
 import json
 import pkgutil
+import re
+import warnings
 
 
 def read_json(filename: str) -> dict:
@@ -9,6 +11,41 @@ def read_json(filename: str) -> dict:
         raise FileNotFoundError(msg)
 
     return dict(json.loads(data.decode("utf8")))
+
+
+def compile_list(rules: dict, key: str, provider_name: str) -> None:
+    result = []
+    for pattern in rules.get(key, []):
+        try:
+            compiled = re.compile(pattern, flags=re.IGNORECASE)
+        except re.error as exc:
+            msg = (
+                f"{exc!r}. "
+                f"Could not compile the regex {pattern!r} in {key!r} section "
+                f"of {provider_name!r}. Skipping"
+            )
+            warnings.warn(msg, stacklevel=2)
+        else:
+            result.append(compiled)
+    rules[key] = result
+
+
+def compile_patterns(all_rules: dict) -> None:
+    for provider_name, rules in all_rules["providers"].items():
+        rules["urlPattern"] = re.compile(
+            rules["urlPattern"], flags=re.IGNORECASE
+        )
+        rules["rules"] = [
+            re.compile(f"^{r}$", flags=re.IGNORECASE)
+            for r in rules.get("rules", [])
+        ]
+        for key in [
+            "referralMarketing",
+            "exceptions",
+            "rawRules",
+            "redirections",
+        ]:
+            compile_list(rules, key, provider_name)
 
 
 def read_config(
@@ -38,4 +75,5 @@ def read_config(
             else:
                 provider[key] = value
 
+    compile_patterns(clear_urls_rules)
     return clear_urls_rules

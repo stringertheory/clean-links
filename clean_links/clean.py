@@ -1,4 +1,3 @@
-import logging
 import re
 from urllib.parse import parse_qs, urlencode, urlsplit
 
@@ -14,7 +13,8 @@ def query_string(url: str, rules: list) -> str:
     delete_keys = {""}
     for rule in rules:
         for key in params:
-            if re.match("^" + rule + "$", key, flags=re.IGNORECASE):
+            # if re.match("^" + rule + "$", key, flags=re.IGNORECASE):
+            if re.match(rule, key):
                 delete_keys.add(key)
 
     for delete_key in delete_keys:
@@ -32,15 +32,7 @@ def match_provider(provider: str, url: str, rules: dict) -> bool:
     match_url = re.match(rules["urlPattern"], url)
     match_exception = None
     for exception_pattern in rules["exceptions"]:
-        try:
-            match_exception = re.match(exception_pattern, url)
-        except Exception:
-            logging.exception(
-                f"something's wrong with regex {exception_pattern!r} "
-                f"for provider {provider!r}."
-            )
-
-        if match_exception:
+        if re.match(exception_pattern, url):
             break
     return bool(match_url and not match_exception)
 
@@ -51,7 +43,7 @@ def clean_url(
     for provider_name, rules in clear_urls_rules["providers"].items():
         if match_provider(provider_name, url, rules):
             for rule in rules["rawRules"]:
-                url = re.sub(rule, "", url, flags=re.IGNORECASE)
+                url = re.sub(rule, "", url)
 
             split = urlsplit(url)
             if keep_query:
