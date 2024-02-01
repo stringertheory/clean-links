@@ -11,12 +11,16 @@ def test_missing_schema():
 
 
 def test_not_an_address():
-    url = "https://www.definitely-not-a-website.boogety"
-    with pytest.raises(requests.exceptions.ConnectionError):
-        unshorten_url(url)
+    url = "https://dingle.berries/"
+    result = unshorten_url(url)
+    assert result["url"] == url
+    assert result["resolved"] == url
+    assert result["status"] is None
+    assert result["exception"].startswith("ConnectionError")
+    assert result["request_history"] == [url]
+    assert result["response_history"] == []
 
 
-# cassettes/{module_name}/test_single.yaml will be used
 @pytest.mark.vcr
 def test_unchanged():
     url = "https://example.com/"
@@ -86,10 +90,9 @@ def test_expired_certificate_ignore():
 def test_resolve_to_mailto():
     url = "https://tinyurl.com/NewwAlemAndKibrom"
     result = unshorten_url(url)
-    resolved = "https://tinyurl.com/NewwAlemAndKibrom"
     assert result["url"] == url
-    assert result["resolved"] == resolved
-    assert result["status"] == 301
+    assert result["resolved"].startswith("mailto:center@moi.gov.eg")
+    assert result["status"] is None
     assert result["exception"].startswith("InvalidSchema: No connection adap")
     assert result["request_history"][0] == url
     assert result["request_history"][1].startswith("mailto:center@moi.gov.eg")
@@ -109,13 +112,13 @@ def test_invalid_url_in_redirect_chain():
     """
     url = "https://ctt.ec/5kum7+"
     result = unshorten_url(url)
-    resolved = "https://clicktotweet.com/5kum7+"
+    resolved = "http://"
     assert result == {
         "url": url,
         "resolved": resolved,
-        "status": 302,
+        "status": None,
         "exception": "InvalidURL: No host specified.",
-        "request_history": [url, resolved, "http://"],
+        "request_history": [url, "https://clicktotweet.com/5kum7+", "http://"],
         "response_history": [301, 302],
     }
 

@@ -1,19 +1,17 @@
 import contextlib
 import warnings
+from itertools import zip_longest
 from typing import Generator, Union
 
 import requests
 import urllib3
 
-from clean_links import __version__
-
-USER_AGENT = f"clean-links/{__version__}"
-USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-)
 HEADERS = {
-    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "accept": (
+        "text/html,application/xhtml+xml,application/xml;"
+        "q=0.9,image/avif,image/webp,image/apng,*/*;"
+        "q=0.8,application/signed-exchange;v=b3;q=0.7"
+    ),
     "accept-encoding": "gzip, deflate, br",
     "accept-language": "en-US,en;q=0.9",
     "sec-fetch-dest": "document",
@@ -21,18 +19,22 @@ HEADERS = {
     "sec-fetch-site": "same-origin",
     "sec-fetch-user": "?1",
     "upgrade-insecure-requests": "1",
-    "user-agent": USER_AGENT,
+    "user-agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
+    ),
 }
 
 
 @contextlib.contextmanager
-def disable_ssl_warnings() -> Generator:
+def _disable_ssl_warnings() -> Generator:
     with warnings.catch_warnings():
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         yield None
 
 
-def send(
+def _send(
     session: requests.Session,
     prepped: requests.PreparedRequest,
     history: dict,
@@ -53,7 +55,7 @@ def send(
     return response.next
 
 
-def request_redirect_chain(
+def _request_redirect_chain(
     session: requests.Session,
     url: str,
     verify: bool,
@@ -71,14 +73,14 @@ def request_redirect_chain(
     prepped = session.prepare_request(request)
 
     # send and follow the redirect chain, filling in the history
-    next_prepped = send(session, prepped, history, verify, timeout)
+    next_prepped = _send(session, prepped, history, verify, timeout)
     while next_prepped:
-        next_prepped = send(session, next_prepped, history, verify, timeout)
+        next_prepped = _send(session, next_prepped, history, verify, timeout)
 
     return history
 
 
-def format_exception(exc: Union[Exception, None]) -> Union[str, None]:
+def _format_exception(exc: Union[Exception, None]) -> Union[str, None]:
     if exc is None:
         return None
     else:
@@ -88,24 +90,39 @@ def format_exception(exc: Union[Exception, None]) -> Union[str, None]:
 def unshorten_url(
     url: str, timeout: float = 9, verify: bool = False, headers: dict = HEADERS
 ) -> dict:
-    with requests.Session() as session, disable_ssl_warnings():
+    with requests.Session() as session, _disable_ssl_warnings():
         exception = None
         try:
-            history = request_redirect_chain(
+            history = _request_redirect_chain(
                 session, url, verify, timeout, headers, "HEAD"
             )
         except requests.exceptions.RequestException as exc:
             exception = exc
             history = getattr(exc, "history", {})
-            if not history or not history["responses"]:
+            if not history or not history["requests"]:
                 raise
 
-        response = history["responses"][-1]
+        pairs = list(zip_longest(history["requests"], history["responses"]))
+        for req, res in pairs:
+            if res is not None and req.url != res.url:
+                msg = (
+                    "something's wrong. "
+                    "url of request and response don't match."
+                )
+                raise ValueError(msg)
+
+        last_request, last_response = pairs[-1]
+
         return {
             "url": url,
-            "resolved": response.url,
-            "status": response.status_code,
-            "exception": format_exception(exception),
+            "resolved": last_request.url,
+            "status": last_response.status_code if last_response else None,
+            "exception": _format_exception(exception),
             "request_history": [r.url for r in history["requests"]],
             "response_history": [r.status_code for r in history["responses"]],
         }
+
+
+if __name__ == "__main__":
+    result = unshorten_url("https://dingle.berries/")
+    print(result)
