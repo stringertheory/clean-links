@@ -17,6 +17,25 @@ def normalize_url(
     clean_kwargs: Union[dict, None] = None,
     canonicalize_kwargs: Union[dict, None] = None,
 ) -> str:
+    """Example function with PEP 484 type annotations. Thrilling.
+
+    this is a [test](https://google.com).
+
+    Args:
+        url: The first parameter.
+        clean_before_unshortening: The second parameter.
+        unshorten_kwargs: butta
+        clean_kwargs: butta
+        canonicalize_kwargs: butta
+
+    Returns:
+        The return value. True for success, False otherwise.
+
+    # test
+
+    Welcome to yo mama.
+
+    """
     # optionally remove e.g. tracking query parameters before first request
     if clean_before_unshortening:
         url = clean_url(url)
