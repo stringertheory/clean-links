@@ -72,3 +72,21 @@ jobs:
 
       - name: Check if documentation can be built
         run: poetry run mkdocs build -s
+
+  wheel-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
+
+      - name: Build the wheel and import it in a clean environment
+        # Installs ONLY the wheel's declared runtime deps, so a missing
+        # Requires-Dist (the 0.1.x "unimportable package" bug) fails here.
+        run: |
+          poetry build
+          python -m venv /tmp/fresh
+          /tmp/fresh/bin/pip install dist/*.whl
+          /tmp/fresh/bin/python -c "import clean_links; clean_links.clean_url('https://x.com/?utm_source=z')"

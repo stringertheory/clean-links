@@ -1,144 +1,119 @@
 # Clean Links
 
-A python library for cleaning up URLs.
+Decide whether two links point at the same resource, to help with
+de-duplicating and counting links.
 
 ---
 
-<style>
-  div.nowrap code {
-    white-space : pre-wrap !important;
-    word-break: break-all;
-  }
-  span.lank {
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 0.33em;
-	font-family: "Chivo Mono", monospace;
-	letter-spacing: -0.05em;
-  }
-</style>
+Say _@Alicia_ posts a link to `https://bit.ly/some-short-link` and _@Barry_
+posts one to `https://trib.al/another-one`. Did they link to the same thing?
 
-Say _@Alicia_ posts a link to <span class="lank">https://bit.ly/dirtylank</span> and _@Barry_
-posts a link to <span class="lank">https://trib.al/5m7fAg3</span>. Did _@Alicia_ and _@Barry_
-link to the same thing?
+In a browser you'd click both and see what happens, but in code it can
+be tricky. Shorteners hide the destination, and changed in tracking
+parameters mean the final URLs often mismatch as plain strings.
 
-When you're using a browser you can click on them and find out, but if
-you are making tools that try to see when people shared the same link.
+`clean-links` follows redirects to each link's final destination,
+strips the stuff that doesn't change _which_ page a link points at,
+and compares what's left.
 
-**The main purpose of this library is to try to answer that question:
-are two links pointing the same place.**
-
----
-
-Install using pip:
+## Install
 
 ```shell
-$ pip install clean_links
+pip install clean_links
 ```
 
-Then get started by unshortening the link that _@Alicia_ posted:
-
-<div class="nowrap">
-```pycon
->>> from clean_links import unshorten_url
->>> alicia = unshorten_url("https://bit.ly/dirtylank")
->>> alicia["resolved"]
-'https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years?cmpid%3D=socialflow-tech&utm_content=tech&utm_medium=social&utm_campaign=socialflow-organic&utm_source=mastodon'
-```
-</div>
-
-It goes to a news article at Bloomberg. The link includes a bunch of
-stuff at the end used for tracking (`utm_source`, etc) that probably
-has to do with where _@Alicia_ saw the link.
-
-How about _@Barry_'s link?
-
-<div class="nowrap">
-```pycon
->>> from clean_links import unshorten_url
->>> barry = unshorten_url("https://trib.al/5m7fAg3")
->>> barry["resolved"]
-'https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years?cmpid%3D=socialflow-twitter-tech&utm_content=tech&utm_medium=social&utm_campaign=socialflow-organic&utm_source=twitter'
-```
-</div>
-
-It does go to the same page! But it has different tracking stuff at
-the end so comparing the URLs won't tell us they're the same:
+## Are two links the same?
 
 ```pycon
->>> alicia == barry
-False
-```
-
-The `clean_url` function can help. It uses the [latest
-rules](https://github.com/ClearURLs/Rules) from the
-[ClearURLs](https://docs.clearurls.xyz/) web extension to remove the
-unneccesary stuff from the links:
-
-<div class="nowrap">
-```pycon
->>> from clean_links import clean_url
->>> a_cleaned = clean_url(alicia["resolved"])
->>> b_cleaned = clean_url(barry["resolved"])
->>> a_cleaned
-'https://www.bloomberg.com/news/articles/2024-01-24/cryptocurrency-ai-electricity-demand-seen-doubling-in-three-years'
->>> a_cleaned == b_cleaned
+>>> from clean_links import are_equivalent_sync
+>>> are_equivalent_sync(
+...     "https://bit.ly/some-short-link",
+...     "https://trib.al/another-one",
+... )
 True
 ```
-</div>
-
-So after unshortening and cleaning, we can see the links that
-_@Alicia_ and _@Barry_ posted were to the same article. Maybe we
-should read it! The combination of unshortening and cleaning is useful
-enough there's a single function, `normalize_url`, to do both.
-
-```pycon
->>> from clean_links import normalize_url
->>> a_normed = normalize_url("https://bit.ly/dirtylank")
->>> b_normed = normalize_url("https://trib.al/5m7fAg3")
->>> a_normed == b_normed
-True
-```
-
-## what it does
-
-Lorem ipsum dolor sit amet, (1) consectetur adipiscing elit.
-{ .annotate }
-
-1.  :man_raising_hand: I'm an annotation! I can contain `code`, **formatted
-    text**, images, ... basically anything that can be expressed in Markdown.
-
-Welcome to the silly jungle. We have fun and games. Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-
-![Image title](https://dummyimage.com/600x400/){width=40%, align=left}
-
-Welcome to the silly jungle. We have fun and games. Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Test again
-
-Welcome to the silly jungle. We have fun and games. Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Welcome to the silly jungle. We have fun and games.
-Test again
 
 !!! note
 
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
-    nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
-    massa, nec semper lorem quam in massa.
+    These calls make live network requests to follow the redirects. The
+    library is **async-first** — drop the `_sync` suffix for the coroutine API
+    (`await are_equivalent(...)`).
 
-## what it don't do
+## Group and count links
 
-Booga booga
+The real job is usually bulk: given many links, group the ones that
+point at the same resource and count them.
+
+```pycon
+>>> from clean_links import group_sync
+>>> links = [
+...     "https://bit.ly/some-short-link",
+...     "https://trib.al/another-one",
+...     "https://example.com/unrelated",
+... ]
+>>> groups = group_sync(links)
+>>> {key: len(members) for key, members in groups.items()}
+{'https://www.bloomberg.com/news/articles/...': 2, 'https://example.com/unrelated': 1}
+```
+
+Two of the three links resolve to the same article, so they share one
+group of size two.
+
+## Persist across runs
+
+For more links, resolve each link at most once and reuse that work
+across runs by giving the `Engine` a SQLite-backed store:
+
+```pycon
+>>> import asyncio
+>>> from clean_links import Engine, SqliteStore
+>>> engine = Engine(store=SqliteStore("cache.db"))
+>>> asyncio.run(engine.canonical_key("https://bit.ly/some-short-link"))
+'https://www.bloomberg.com/news/articles/...'
+```
+
+Re-running the same link, even in a different process, is served from
+the cache without another network request. The `Engine` also throttles
+requests per host and is polite by default.
+
+## Tune the policy for your data
+
+`clean-links` strips only _known_ tracking parameters and keeps
+everything else, so it avoids wrongly merging two different resources
+into one. To find the cases where a query parameter is the only thing
+making different groups, use `group` with "sensitivity":
+
+```pycon
+>>> result = group_sync(
+...     ["https://shop.example/item?variant=red",
+...      "https://shop.example/item?variant=blue"],
+...     show_query_sensitivity=True,
+... )
+>>> len(result["groups"])          # kept apart (variant might be meaningful)
+2
+>>> result["query_sensitive"]      # ...but flagged: they'd merge if query dropped
+[['https://shop.example/item?variant=red', 'https://shop.example/item?variant=blue']]
+```
+
+Review those clusters and decide, per parameter, whether it's junk
+(add a rule to strip it) or meaningful (leave it).
+
+## How clean-links decides two URLs are the same
+
+Under the hood, a link is walked to its final **Endpoint**, and equivalence is
+decided from the Endpoint's **Canonical key** — the Endpoint is the source of
+truth; the redirect graph is only a cache.
+Links wrapped in a **Gateway** (e.g. `google.com/url?q=…`,
+`l.facebook.com/l.php?u=…`) are _unwrapped_ straight from the URL, so they
+resolve to their real target without a request.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor You
+    You->>bit.ly: HEAD /some-short-link
+    bit.ly-->>You: 301 → bloomberg.com/…?utm_source=x
+    You->>bloomberg.com: HEAD /…?utm_source=x
+    bloomberg.com-->>You: 200 OK (Endpoint)
+    Note over You: strip utm_* → Canonical key
+```

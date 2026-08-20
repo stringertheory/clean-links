@@ -10,6 +10,7 @@ copyright: is maintained by <a href="https://github.com/stringertheory">Mike Str
 nav:
   - Home: index.md
   - Modules: modules.md
+  - Glossary: glossary.md
 plugins:
   - search
   - social
@@ -86,7 +87,11 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 watch:
   - docs_extras
