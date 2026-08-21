@@ -4,10 +4,10 @@ driven deterministically by a fake in tests and by a real client (or the
 caller's own injected fetcher) in production.
 """
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-from typing import Iterable, List, Optional, Tuple
 from urllib.parse import urljoin
 
 DEFAULT_HEADERS = {
@@ -28,12 +28,12 @@ class FetchError(Exception):
 @dataclass
 class FetchResult:
     status_code: int
-    location: Optional[str]  # absolute redirect target, or None
+    location: str | None  # absolute redirect target, or None
     url: str
-    retry_after: Optional[float] = None  # seconds, from Retry-After
+    retry_after: float | None = None  # seconds, from Retry-After
 
 
-def _parse_retry_after(value: Optional[str]) -> Optional[float]:
+def _parse_retry_after(value: str | None) -> float | None:
     """Seconds to wait, from a Retry-After header. Accepts both forms of
     RFC 7231: delta-seconds (an integer) and an HTTP-date, which is converted
     to seconds from now (clamped at 0 for a past instant)."""
@@ -64,8 +64,8 @@ class FakeFetcher:
 
     def __init__(
         self,
-        routes: Optional[dict] = None,
-        fail: Optional[Iterable[str]] = None,
+        routes: dict | None = None,
+        fail: Iterable[str] | None = None,
     ) -> None:
         # Copy list-valued specs: fetch() consumes them with pop(), which
         # would otherwise drain the caller's dict (and any sibling fetcher
@@ -75,7 +75,7 @@ class FakeFetcher:
             for url, spec in (routes or {}).items()
         }
         self.fail = set(fail or ())
-        self.calls: List[Tuple[str, str]] = []
+        self.calls: list[tuple[str, str]] = []
 
     async def fetch(self, url: str, method: str) -> FetchResult:
         self.calls.append((url, method))
@@ -109,7 +109,7 @@ class HttpxFetcher:
         self,
         verify: bool = True,
         timeout: float = 9.0,
-        headers: Optional[dict] = None,
+        headers: dict | None = None,
     ) -> None:
         import httpx
 

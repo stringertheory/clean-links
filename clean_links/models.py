@@ -1,7 +1,6 @@
 """Core data types for the link equivalence engine."""
 
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 
 @dataclass
@@ -9,8 +8,8 @@ class Hop:
     """A single URL within a Redirect chain."""
 
     url: str
-    status: Optional[int]
-    location: Optional[str]
+    status: int | None
+    location: str | None
     kind: str  # "redirect" | "unwrap" | "endpoint" | "error"
 
 
@@ -25,10 +24,10 @@ class Resolution:
 
     url: str
     endpoint: str
-    chain: List[str]
+    chain: list[str]
     reachable: bool
-    error: Optional[str] = None
-    hops: List[Hop] = field(default_factory=list)
+    error: str | None = None
+    hops: list[Hop] = field(default_factory=list)
 
 
 @dataclass

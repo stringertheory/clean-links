@@ -26,23 +26,19 @@ def engine(fetcher, store=None):
 
 
 def test_shorteners_to_same_article_merge():
-    fetcher = FakeFetcher(
-        {
-            "https://bit.ly/x": (301, "https://news.com/a?utm_source=fb"),
-            "https://trib.al/y": (301, "https://news.com/a?utm_source=tw"),
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://bit.ly/x": (301, "https://news.com/a?utm_source=fb"),
+        "https://trib.al/y": (301, "https://news.com/a?utm_source=tw"),
+    })
     eng = engine(fetcher)
     assert run(eng.are_equivalent("https://bit.ly/x", "https://trib.al/y"))
 
 
 def test_different_articles_split():
-    fetcher = FakeFetcher(
-        {
-            "https://bit.ly/x": (301, "https://news.com/a"),
-            "https://bit.ly/z": (301, "https://news.com/b"),
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://bit.ly/x": (301, "https://news.com/a"),
+        "https://bit.ly/z": (301, "https://news.com/b"),
+    })
     eng = engine(fetcher)
     assert not run(eng.are_equivalent("https://bit.ly/x", "https://bit.ly/z"))
 
@@ -57,12 +53,10 @@ def test_gateways_split_and_never_fetched():
 
 
 def test_redirect_loop_terminates():
-    fetcher = FakeFetcher(
-        {
-            "https://a.com/1": (301, "https://a.com/2"),
-            "https://a.com/2": (301, "https://a.com/1"),
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://a.com/1": (301, "https://a.com/2"),
+        "https://a.com/2": (301, "https://a.com/1"),
+    })
     result = run(engine(fetcher).resolve("https://a.com/1"))
     assert result.reachable is False
     assert result.error == "redirect loop"
@@ -84,13 +78,11 @@ def test_unreachable_endpoint_falls_back_and_still_groups():
 
 
 def test_hop_cache_avoids_refetch_of_shared_tail():
-    fetcher = FakeFetcher(
-        {
-            "https://bit.ly/x": (301, "https://mid.com/1"),
-            "https://mid.com/1": (301, "https://news.com/final"),
-            "https://s2.co/y": (301, "https://mid.com/1"),
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://bit.ly/x": (301, "https://mid.com/1"),
+        "https://mid.com/1": (301, "https://news.com/final"),
+        "https://s2.co/y": (301, "https://mid.com/1"),
+    })
     eng = engine(fetcher)
     run(eng.resolve("https://bit.ly/x"))
     seen = len(fetcher.calls)
@@ -161,13 +153,11 @@ def test_group_coalesces_concurrent_shared_tail():
     # Two links sharing a redirect tail resolve concurrently in group();
     # the shared hops must be fetched once, not once per link (the hop cache
     # alone can't help -- nothing is cached yet while both are in flight).
-    fetcher = YieldingFetcher(
-        {
-            "https://bit.ly/x": (301, "https://mid.com/1"),
-            "https://s2.co/y": (301, "https://mid.com/1"),
-            "https://mid.com/1": (301, "https://news.com/final"),
-        }
-    )
+    fetcher = YieldingFetcher({
+        "https://bit.ly/x": (301, "https://mid.com/1"),
+        "https://s2.co/y": (301, "https://mid.com/1"),
+        "https://mid.com/1": (301, "https://news.com/final"),
+    })
     eng = engine(fetcher)
     run(eng.group(["https://bit.ly/x", "https://s2.co/y"]))
     fetched = [url for url, _ in fetcher.calls]
@@ -179,11 +169,9 @@ def test_retry_after_zero_still_retries():
     # Retry-After: 0 (and past HTTP-dates, which _parse_retry_after clamps to
     # 0.0) is a real "retry now" instruction, not a missing header -- the
     # retry must fire, so the 200 on the second attempt wins over the 503.
-    fetcher = FakeFetcher(
-        {
-            "https://x.com/a": [(503, None, 0.0), (200, None)],
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://x.com/a": [(503, None, 0.0), (200, None)],
+    })
     eng = engine(fetcher)
     result = run(eng.resolve("https://x.com/a"))
     assert result.reachable is True
@@ -200,20 +188,16 @@ def test_group_isolates_non_fetcherror_failure():
                 raise ValueError("kaboom")
             return await super().fetch(url, method)
 
-    fetcher = ExplodingFetcher(
-        {
-            "https://bit.ly/ok1": (301, "https://news.com/a"),
-            "https://bit.ly/ok2": (301, "https://news.com/a"),
-        }
-    )
+    fetcher = ExplodingFetcher({
+        "https://bit.ly/ok1": (301, "https://news.com/a"),
+        "https://bit.ly/ok2": (301, "https://news.com/a"),
+    })
     groups = run(
-        engine(fetcher).group(
-            [
-                "https://boom.co/x",
-                "https://bit.ly/ok1",
-                "https://bit.ly/ok2",
-            ]
-        )
+        engine(fetcher).group([
+            "https://boom.co/x",
+            "https://bit.ly/ok1",
+            "https://bit.ly/ok2",
+        ])
     )
     merged = [members for members in groups.values() if len(members) > 1]
     assert merged == [["https://bit.ly/ok1", "https://bit.ly/ok2"]]
@@ -242,22 +226,18 @@ def test_query_sensitivity_does_not_refetch_unreachable():
 def test_group_survives_one_malformed_port_endpoint():
     # A malformed port in an endpoint URL (e.g. from a bad Location header)
     # must not abort the whole gathered batch -- the other URLs still group.
-    fetcher = FakeFetcher(
-        {
-            "https://bit.ly/bad": (301, "http://host:99999/x"),
-            "https://bit.ly/ok1": (301, "https://news.com/a"),
-            "https://bit.ly/ok2": (301, "https://news.com/a"),
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://bit.ly/bad": (301, "http://host:99999/x"),
+        "https://bit.ly/ok1": (301, "https://news.com/a"),
+        "https://bit.ly/ok2": (301, "https://news.com/a"),
+    })
     eng = engine(fetcher)
     groups = run(
-        eng.group(
-            [
-                "https://bit.ly/bad",
-                "https://bit.ly/ok1",
-                "https://bit.ly/ok2",
-            ]
-        )
+        eng.group([
+            "https://bit.ly/bad",
+            "https://bit.ly/ok1",
+            "https://bit.ly/ok2",
+        ])
     )
     merged = [members for members in groups.values() if len(members) > 1]
     assert merged == [["https://bit.ly/ok1", "https://bit.ly/ok2"]]

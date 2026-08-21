@@ -16,29 +16,26 @@ Model-A escalation (out of scope).
 
 import base64
 import binascii
-from typing import Optional
 from urllib.parse import parse_qsl, unquote, urlsplit
 
 from clean_links.clean import clear_urls_rules, match_provider
 
 # Strongly redirect-target-named keys only (kept conservative on purpose:
 # e.g. `q` and `r` are omitted because they are commonly search/ref keys).
-_TARGET_KEYS = frozenset(
-    {
-        "url",
-        "u",
-        "to",
-        "target",
-        "dest",
-        "destination",
-        "redirect",
-        "redirect_uri",
-        "redirecturl",
-        "out",
-        "goto",
-        "returnurl",
-    }
-)
+_TARGET_KEYS = frozenset({
+    "url",
+    "u",
+    "to",
+    "target",
+    "dest",
+    "destination",
+    "redirect",
+    "redirect_uri",
+    "redirecturl",
+    "out",
+    "goto",
+    "returnurl",
+})
 
 
 def _is_abs_url(value: str) -> bool:
@@ -49,7 +46,7 @@ def _is_abs_url(value: str) -> bool:
     return split.scheme in ("http", "https") and bool(split.netloc)
 
 
-def _maybe_url(value: str) -> Optional[str]:
+def _maybe_url(value: str) -> str | None:
     value = value.strip()
     if _is_abs_url(value):
         return value
@@ -66,7 +63,7 @@ def _maybe_url(value: str) -> Optional[str]:
     return None
 
 
-def _structural_target(url: str) -> Optional[str]:
+def _structural_target(url: str) -> str | None:
     split = urlsplit(url)
     for key, value in parse_qsl(split.query, keep_blank_values=True):
         if key.lower() in _TARGET_KEYS:
@@ -76,7 +73,7 @@ def _structural_target(url: str) -> Optional[str]:
     return None
 
 
-def _curated_target(url: str) -> Optional[str]:
+def _curated_target(url: str) -> str | None:
     for name, rules in clear_urls_rules["providers"].items():
         # A provider's redirect-capture rules are host-scoped: only apply
         # them when that provider's urlPattern matches, or a rule like
@@ -99,7 +96,7 @@ def _curated_target(url: str) -> Optional[str]:
     return None
 
 
-def unwrap(url: str) -> Optional[str]:
+def unwrap(url: str) -> str | None:
     """Return the Gateway's target if it can be reliably extracted, else
     None (meaning: not a detectable Gateway -- follow it as a redirect)."""
     target = _curated_target(url)

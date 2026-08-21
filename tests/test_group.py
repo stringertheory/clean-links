@@ -11,21 +11,17 @@ def engine(fetcher):
 
 
 def test_group_counts_by_resource():
-    fetcher = FakeFetcher(
-        {
-            "https://bit.ly/x": (301, "https://news.com/a?utm_source=fb"),
-            "https://trib.al/y": (301, "https://news.com/a?utm_source=tw"),
-            "https://bit.ly/z": (301, "https://news.com/b"),
-        }
-    )
+    fetcher = FakeFetcher({
+        "https://bit.ly/x": (301, "https://news.com/a?utm_source=fb"),
+        "https://trib.al/y": (301, "https://news.com/a?utm_source=tw"),
+        "https://bit.ly/z": (301, "https://news.com/b"),
+    })
     groups = run(
-        engine(fetcher).group(
-            [
-                "https://bit.ly/x",
-                "https://trib.al/y",
-                "https://bit.ly/z",
-            ]
-        )
+        engine(fetcher).group([
+            "https://bit.ly/x",
+            "https://trib.al/y",
+            "https://bit.ly/z",
+        ])
     )
     sizes = sorted(len(members) for members in groups.values())
     assert sizes == [1, 2]

@@ -5,7 +5,7 @@ redirect graph (in the Store) is a cache.
 
 import asyncio
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 from clean_links.canonical import canonical_key as _key_of
@@ -17,7 +17,7 @@ from clean_links.store import InMemoryStore
 from clean_links.unwrap import unwrap
 
 
-def _is_redirect(status: Optional[int]) -> bool:
+def _is_redirect(status: int | None) -> bool:
     return status is not None and 300 <= status < 400
 
 
@@ -31,10 +31,10 @@ def _visit_key(url: str) -> str:
 class Engine:
     def __init__(
         self,
-        fetcher: Optional[Fetcher] = None,
-        store: Optional[Store] = None,
-        limiter: Optional[RateLimiter] = None,
-        options: Optional[Options] = None,
+        fetcher: Fetcher | None = None,
+        store: Store | None = None,
+        limiter: RateLimiter | None = None,
+        options: Options | None = None,
     ) -> None:
         self.options = options or Options()
         self._owns_fetcher = fetcher is None
@@ -46,8 +46,8 @@ class Engine:
         self.limiter: RateLimiter = limiter or InMemoryRateLimiter()
         # In-flight hop fetches, so concurrent resolutions of a shared
         # redirect tail (within one group()) fetch it once, not once per link.
-        self._inflight_hops: Dict[
-            str, asyncio.Future[Tuple[Optional[int], Optional[str]]]
+        self._inflight_hops: dict[
+            str, asyncio.Future[tuple[int | None, str | None]]
         ] = {}
 
     async def aclose(self) -> None:
@@ -69,7 +69,7 @@ class Engine:
         Hop and ``reachable`` is False."""
         current = url
         chain = [current]
-        hops: List[Hop] = []
+        hops: list[Hop] = []
         visited = {_visit_key(current)}
 
         for _ in range(self.options.max_redirects + 1):
@@ -108,9 +108,7 @@ class Engine:
             url, current, chain, False, "too many redirects", hops
         )
 
-    async def _resolve_hop(
-        self, url: str
-    ) -> Tuple[Optional[int], Optional[str]]:
+    async def _resolve_hop(self, url: str) -> tuple[int | None, str | None]:
         """Return (status, location) for one Hop, via the cache when fresh.
         Raises FetchError on transport failure (also negatively cached).
         Concurrent callers for the same URL share one in-flight fetch."""
@@ -134,7 +132,7 @@ class Engine:
 
     async def _fetch_and_store(
         self, url: str, now: float
-    ) -> Tuple[Optional[int], Optional[str]]:
+    ) -> tuple[int | None, str | None]:
         """Fetch one Hop, record it, and return (status, location). The
         coalescing/caching bookkeeping lives in _resolve_hop."""
         try:
@@ -156,9 +154,7 @@ class Engine:
         await self.store.put_hop(url, status, location, "endpoint", now)
         return status, location
 
-    async def _fetch_following(
-        self, url: str
-    ) -> Tuple[Optional[int], Optional[str]]:
+    async def _fetch_following(self, url: str) -> tuple[int | None, str | None]:
         result = await self._fetch_once(url, "HEAD")
         if result.status_code in (403, 405, 501):
             result = await self._fetch_once(url, "GET")
@@ -175,7 +171,7 @@ class Engine:
 
     # -- equivalence & aggregation --------------------------------------
 
-    async def _resolve_endpoint(self, url: str) -> Tuple[str, str]:
+    async def _resolve_endpoint(self, url: str) -> tuple[str, str]:
         """Return ``(endpoint, canonical key)`` for ``url``. A fresh
         resolved-cache entry is served as-is -- not re-resolved and not
         re-stamped, so success_ttl does not slide on every access. A new
@@ -228,25 +224,25 @@ class Engine:
         return key_a == key_b
 
     async def group(
-        self, urls: List[str], show_query_sensitivity: bool = False
-    ) -> Dict:
+        self, urls: list[str], show_query_sensitivity: bool = False
+    ) -> dict:
         """Bucket ``urls`` by Canonical key (``{key: [urls]}``). With
         ``show_query_sensitivity=True`` return
         ``{"groups": ..., "query_sensitive": [...]}`` where the latter lists
         the clusters that would merge if the query string were dropped."""
         keys = await asyncio.gather(*[self._safe_key(u) for u in urls])
-        groups: Dict[str, List[str]] = {}
-        for url, key in zip(urls, keys):
+        groups: dict[str, list[str]] = {}
+        for url, key in zip(urls, keys, strict=True):
             groups.setdefault(key, []).append(url)
         if not show_query_sensitivity:
             return groups
 
-        stripped = await asyncio.gather(
-            *[self._safe_key(u, strip_query=True) for u in urls]
-        )
-        key_of_url = dict(zip(urls, keys))
-        by_stripped: Dict[str, List[str]] = {}
-        for url, skey in zip(urls, stripped):
+        stripped = await asyncio.gather(*[
+            self._safe_key(u, strip_query=True) for u in urls
+        ])
+        key_of_url = dict(zip(urls, keys, strict=True))
+        by_stripped: dict[str, list[str]] = {}
+        for url, skey in zip(urls, stripped, strict=True):
             by_stripped.setdefault(skey, []).append(url)
         # Clusters that would MERGE if query were dropped but are split now.
         sensitive = [
@@ -285,10 +281,10 @@ async def are_equivalent(a: str, b: str, **engine_kwargs: Any) -> bool:
 
 
 async def group(
-    urls: List[str],
+    urls: list[str],
     show_query_sensitivity: bool = False,
     **engine_kwargs: Any,
-) -> Dict:
+) -> dict:
     engine = Engine(**engine_kwargs)
     try:
         return await engine.group(
@@ -311,10 +307,10 @@ def are_equivalent_sync(a: str, b: str, **engine_kwargs: Any) -> bool:
 
 
 def group_sync(
-    urls: List[str],
+    urls: list[str],
     show_query_sensitivity: bool = False,
     **engine_kwargs: Any,
-) -> Dict:
+) -> dict:
     return asyncio.run(
         group(
             urls, show_query_sensitivity=show_query_sensitivity, **engine_kwargs

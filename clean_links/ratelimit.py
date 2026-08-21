@@ -7,53 +7,51 @@ import asyncio
 import ipaddress
 import time
 from collections import OrderedDict
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, List
 from urllib.parse import urlsplit
 
 # Compact, approximate public-suffix set: the multi-label TLDs and the
 # user-content platforms where each subdomain is a separate site. Good
 # enough to fold www./bare and keep every *.blogspot.com distinct; swap in
 # a real PSL library for exhaustive coverage.
-_MULTI_SUFFIXES = frozenset(
-    {
-        "co.uk",
-        "org.uk",
-        "gov.uk",
-        "ac.uk",
-        "me.uk",
-        "com.au",
-        "net.au",
-        "org.au",
-        "edu.au",
-        "gov.au",
-        "co.jp",
-        "or.jp",
-        "ne.jp",
-        "ac.jp",
-        "go.jp",
-        "co.nz",
-        "com.br",
-        "com.mx",
-        "co.in",
-        "co.za",
-        "com.sg",
-        "com.hk",
-        "co.kr",
-        "com.tr",
-        "com.cn",
-        "com.tw",
-        "blogspot.com",
-        "wordpress.com",
-        "tumblr.com",
-        "substack.com",
-        "medium.com",
-        "github.io",
-        "gitlab.io",
-        "netlify.app",
-        "vercel.app",
-    }
-)
+_MULTI_SUFFIXES = frozenset({
+    "co.uk",
+    "org.uk",
+    "gov.uk",
+    "ac.uk",
+    "me.uk",
+    "com.au",
+    "net.au",
+    "org.au",
+    "edu.au",
+    "gov.au",
+    "co.jp",
+    "or.jp",
+    "ne.jp",
+    "ac.jp",
+    "go.jp",
+    "co.nz",
+    "com.br",
+    "com.mx",
+    "co.in",
+    "co.za",
+    "com.sg",
+    "com.hk",
+    "co.kr",
+    "com.tr",
+    "com.cn",
+    "com.tw",
+    "blogspot.com",
+    "wordpress.com",
+    "tumblr.com",
+    "substack.com",
+    "medium.com",
+    "github.io",
+    "gitlab.io",
+    "netlify.app",
+    "vercel.app",
+})
 
 
 def registrable_domain(host: str) -> str:
@@ -137,7 +135,7 @@ class InMemoryRateLimiter:
         if overflow <= 0:
             return
         now = time.monotonic()
-        victims: List[str] = []
+        victims: list[str] = []
         for domain, state in self._domains.items():  # least-recent first
             if state.in_flight == 0 and state.backoff_until <= now:
                 victims.append(domain)
