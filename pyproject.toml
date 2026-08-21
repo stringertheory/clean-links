@@ -1,6 +1,6 @@
 [project]
 name = "clean_links"
-version = "0.2.1"
+version = "0.2.2"
 description = "Decide whether two links point at the same resource"
 authors = [
   { name = "Mike Stringer", email = "mike.stringer.internet@gmail.com" },
@@ -36,7 +36,7 @@ mkdocstrings = {extras = ["python"], version = "^1.0"}
 
 
 [tool.bumpversion]
-current_version = "0.2.1"
+current_version = "0.2.2"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"
