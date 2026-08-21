@@ -1,19 +1,25 @@
-[tool.poetry]
+[project]
 name = "clean_links"
 version = "0.2.0"
 description = "Decide whether two links point at the same resource"
-authors = ["Mike Stringer <mike.stringer.internet@gmail.com>"]
-repository = "https://github.com/stringertheory/clean-links"
-documentation = "https://stringertheory.github.io/clean-links/"
+authors = [
+  { name = "Mike Stringer", email = "mike.stringer.internet@gmail.com" },
+]
 readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+  "w3lib>=2.4.1,<3.0.0",
+  "httpx>=0.28.1,<0.29.0",
+]
+
+[project.urls]
+Repository = "https://github.com/stringertheory/clean-links"
+Documentation = "https://stringertheory.github.io/clean-links/"
+
+[tool.poetry]
 packages = [
   {include = "clean_links"}
 ]
-
-[tool.poetry.dependencies]
-python = ">=3.10,<4.0"
-w3lib = "^2.4.1"
-httpx = "^0.28.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3"
@@ -53,7 +59,7 @@ filename = "clean_links/__init__.py"
 filename = "pyproject.toml"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
