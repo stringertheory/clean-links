@@ -39,6 +39,13 @@ publish: ## publish a release to pypi.
 .PHONY: build-and-publish
 build-and-publish: build publish ## Build and publish.
 
+.PHONY: update-clearurls
+update-clearurls: ## Refresh the vendored ClearURLs ruleset from upstream.
+	@echo "🚀 Fetching latest ClearURLs rules"
+	@curl -fsSL https://rules2.clearurls.xyz/data.min.json -o clean_links/clearurls.json
+	@poetry run pre-commit run prettier --files clean_links/clearurls.json || true
+	@echo "✅ Updated clean_links/clearurls.json — review 'git diff' and run 'make test'."
+
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
 	@poetry run mkdocs build -s
