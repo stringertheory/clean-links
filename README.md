@@ -12,6 +12,12 @@ Shorteners hide the destination and per-share tracking parameters mean the final
 URLs rarely match as strings; `clean-links` follows the redirects, strips the
 cruft, and compares what's left.
 
+> **Using an AI coding agent?** See
+> [`llms.txt`](https://stringertheory.github.io/clean-links/llms.txt) — an
+> LLM-oriented reference covering the full API, the persistent-cache recipe, and
+> the behavioral contracts (caching, TTLs, rate limits, error handling) that
+> function signatures don't reveal.
+
 Install with:
 
 ```shell

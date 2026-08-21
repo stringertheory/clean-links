@@ -11,6 +11,7 @@ nav:
   - Home: index.md
   - Modules: modules.md
   - Glossary: glossary.md
+  - For LLMs (llms.txt): llms.txt
 plugins:
   - search
   # Social-card generation downloads fonts from Google at build time, which
