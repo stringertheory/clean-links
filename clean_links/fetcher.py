@@ -4,6 +4,7 @@ driven deterministically by a fake in tests and by a real client (or the
 caller's own injected fetcher) in production.
 """
 
+import ssl
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -131,10 +132,18 @@ class HttpxFetcher:
                 retry_after = _parse_retry_after(
                     response.headers.get("retry-after")
                 )
-        except (self._httpx.HTTPError, self._httpx.InvalidURL) as exc:
+        except (
+            self._httpx.HTTPError,
+            self._httpx.InvalidURL,
+            ssl.SSLError,
+        ) as exc:
             # InvalidURL is NOT an HTTPError subclass, so a malformed URL or
             # redirect Location (control char / bad host) would otherwise
             # escape as a raw exception and abort the whole group() batch.
+            # ssl.SSLError likewise: a TLS handshake failure (e.g. a host that
+            # serves an incomplete cert chain) can surface as a raw ssl error
+            # rather than an httpx.ConnectError, so catch it here too -- else it
+            # escapes uncaught and is never negatively cached (retried forever).
             msg = f"{type(exc).__name__}: {exc}"
             raise FetchError(msg) from exc
         if location is not None:
