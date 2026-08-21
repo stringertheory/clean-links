@@ -5,7 +5,6 @@ Deliberately biased away from a False merge: only *known* trackers are
 stripped (unknown params are kept), so distinct Resources stay split.
 """
 
-from typing import Optional
 from urllib.parse import urlsplit, urlunsplit
 
 from w3lib.url import canonicalize_url
@@ -22,7 +21,7 @@ def _keep_fragment(fragment: str) -> bool:
 
 def canonical_key(
     url: str,
-    options: Optional[Options] = None,
+    options: Options | None = None,
     strip_query: bool = False,
 ) -> str:
     options = options or Options()

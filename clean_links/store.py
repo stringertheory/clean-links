@@ -11,28 +11,27 @@ Records are plain tuples:
 """
 
 import asyncio
-from typing import Dict, Optional, Tuple
 
 
 class InMemoryStore:
     def __init__(self) -> None:
-        self._hops: Dict[str, Tuple] = {}
-        self._resolved: Dict[str, Tuple] = {}
+        self._hops: dict[str, tuple] = {}
+        self._resolved: dict[str, tuple] = {}
 
-    async def get_hop(self, url: str) -> Optional[Tuple]:
+    async def get_hop(self, url: str) -> tuple | None:
         return self._hops.get(url)
 
     async def put_hop(
         self,
         url: str,
-        status: Optional[int],
-        location: Optional[str],
+        status: int | None,
+        location: str | None,
         kind: str,
         fetched_at: float,
     ) -> None:
         self._hops[url] = (status, location, kind, fetched_at)
 
-    async def get_resolved(self, url: str) -> Optional[Tuple]:
+    async def get_resolved(self, url: str) -> tuple | None:
         return self._resolved.get(url)
 
     async def put_resolved(
@@ -65,7 +64,7 @@ class SqliteStore:
         self._conn.commit()
         self._lock = asyncio.Lock()
 
-    async def get_hop(self, url: str) -> Optional[Tuple]:
+    async def get_hop(self, url: str) -> tuple | None:
         cursor = self._conn.execute(
             "SELECT status, location, kind, fetched_at FROM hop WHERE url=?",
             (url,),
@@ -76,8 +75,8 @@ class SqliteStore:
     async def put_hop(
         self,
         url: str,
-        status: Optional[int],
-        location: Optional[str],
+        status: int | None,
+        location: str | None,
         kind: str,
         fetched_at: float,
     ) -> None:
@@ -90,7 +89,7 @@ class SqliteStore:
             )
             self._conn.commit()
 
-    async def get_resolved(self, url: str) -> Optional[Tuple]:
+    async def get_resolved(self, url: str) -> tuple | None:
         cursor = self._conn.execute(
             "SELECT endpoint, key, fetched_at FROM resolved WHERE url=?",
             (url,),

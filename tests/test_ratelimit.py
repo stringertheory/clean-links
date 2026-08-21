@@ -1,5 +1,6 @@
 import asyncio
 import time
+from itertools import pairwise
 
 from clean_links.ratelimit import InMemoryRateLimiter, registrable_domain
 
@@ -32,7 +33,7 @@ def test_min_interval_spaces_same_host():
         return await asyncio.gather(*[hit() for _ in range(4)])
 
     times = sorted(run(main()))
-    gaps = [b - a for a, b in zip(times, times[1:])]
+    gaps = [b - a for a, b in pairwise(times)]
     assert min(gaps) >= 0.04
 
 

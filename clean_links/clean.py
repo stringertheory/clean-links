@@ -7,7 +7,6 @@ matched keys are stripped, every other parameter is preserved *verbatim*
 silently rewrites a URL it isn't targeting.
 """
 
-from typing import List
 from urllib.parse import unquote_plus, urlsplit, urlunsplit
 
 from clean_links.config import read_config
@@ -15,7 +14,7 @@ from clean_links.config import read_config
 clear_urls_rules = read_config()
 
 
-def _filter_query(query: str, compiled_rules: List) -> str:
+def _filter_query(query: str, compiled_rules: list) -> str:
     """Drop query pairs whose (decoded) key matches a rule; keep the rest
     exactly as written."""
     if not query:
@@ -32,7 +31,7 @@ def _filter_query(query: str, compiled_rules: List) -> str:
     return "&".join(kept)
 
 
-def _filter_fragment(fragment: str, compiled_rules: List) -> str:
+def _filter_fragment(fragment: str, compiled_rules: list) -> str:
     """Strip tracking params from a fragment's query part (SPA routes such
     as ``#!/path?utm_x=1``); leave plain fragments untouched."""
     if "?" not in fragment:
@@ -69,13 +68,11 @@ def clean_url(
             fragment = _filter_fragment(split.fragment, rules["rules"])
         else:
             fragment = ""
-        url = urlunsplit(
-            (
-                split.scheme,
-                split.netloc,
-                split.path,
-                query,
-                fragment,
-            )
-        )
+        url = urlunsplit((
+            split.scheme,
+            split.netloc,
+            split.path,
+            query,
+            fragment,
+        ))
     return url

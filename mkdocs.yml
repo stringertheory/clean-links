@@ -13,7 +13,12 @@ nav:
   - Glossary: glossary.md
 plugins:
   - search
-  - social
+  # Social-card generation downloads fonts from Google at build time, which
+  # flakes in CI (BadZipFile). Gate it so a docs-validity build can skip it:
+  # unset -> enabled (local/deploy still generate cards), MKDOCS_SOCIAL=false
+  # in CI's docs-build check.
+  - social:
+      enabled: !ENV [MKDOCS_SOCIAL, true]
   - mkdocstrings:
       handlers:
         python:
