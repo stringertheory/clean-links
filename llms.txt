@@ -1,0 +1,127 @@
+# clean-links
+
+> Decide whether two links point at the same **Resource** (the page a person
+> would call "the same thing"), so shared links can be de-duplicated and counted.
+> It follows redirects to each link's final URL, strips known tracking params
+> (ClearURLs), and compares what's left. Async-first, optional persistent cache.
+
+For coding agents **integrating** clean-links into their own code. `import
+clean_links` (PyPI `clean_links`). Short and self-contained — safe to read in
+full, or stop after Quick start and come back for a section by name:
+
+- Compare or group links → **Quick start** (the common case; enough on its own)
+- Persist / scale across runs → **Persistent cache**
+- Output looks wrong, or "will this be correct?" → **Contracts**
+- Exact signatures, `Engine`, `Options` → **API surface**
+- Something misbehaves → **Gotchas**
+
+Full vocabulary: docs/glossary.md.
+
+## Quick start (sync — makes live network requests)
+
+```python
+from clean_links import are_equivalent_sync, group_sync
+
+are_equivalent_sync("https://bit.ly/x", "https://trib.al/y")   # -> bool
+
+groups = group_sync(["https://bit.ly/x", "https://trib.al/y", "https://ex.com/z"])
+# -> {canonical_key: [input_urls...]}   the first two resolve to one Resource:
+# {"https://www.bloomberg.com/...": ["https://bit.ly/x", "https://trib.al/y"],
+#  "https://ex.com/z": ["https://ex.com/z"]}
+```
+
+Every `*_sync` is an `asyncio.run()` wrapper over an async coroutine of the same
+name — drop the suffix and `await` it.
+
+## Persistent cache across runs (the main recipe)
+
+Resolve each link at most once and reuse it across runs/processes by giving an
+`Engine` a `SqliteStore`:
+
+```python
+import asyncio
+from clean_links import Engine, SqliteStore
+
+async def main(urls):
+    store = SqliteStore("cache.sqlite")   # created if missing (WAL)
+    engine = Engine(store=store)
+    try:
+        return await engine.group(urls)
+    finally:
+        await engine.aclose()   # closes the Engine's OWN http client...
+        await store.close()     # ...NOT a store you passed in — that's yours
+
+asyncio.run(main(urls))
+```
+
+**Ownership rule:** `Engine.aclose()` frees only what the Engine created. A
+`store`/`fetcher`/`limiter` you pass in, you close yourself. (Module-level
+helpers build and close their own Engine per call, so a `store=` handed to them
+is also left open — use an explicit `Engine` for a persistent cache.)
+
+## Contracts that keep your usage correct
+
+- **Endpoint is truth.** The key is computed from a link's final URL; the stored
+  redirect graph is only a cache.
+- **Caching:** a reachable resolution is reused for `success_ttl` (30 d); a
+  failure is negatively cached for `failure_ttl` (6 h) then retried — so a
+  transiently-down or blocked host recovers on a later run by itself.
+- **Failures never raise inside `group`/`canonical_key`.** An unreachable link
+  gets a best-effort key from the deepest URL seen (bias to **false-split**): it
+  forms its own bucket instead of wrongly merging. Corollary — a duplicate
+  reachable *only* via a redirect that can't be followed won't be detected.
+- **Gateways** (`google.com/url?q=…`, `l.facebook.com/l.php?u=…`) are unwrapped
+  from the URL with **no request**; **shorteners** (bit.ly, t.co) are followed.
+- **Fetch:** `HEAD`, retried as `GET` on 403/405/501; `Retry-After` honored on
+  429/503.
+- **Polite by default:** ≤2 in-flight and ≥1 s apart **per registrable domain**
+  (`www.nature.com` == `nature.com`), unbounded across hosts — many-host batches
+  are fast; one busy host crawls ~1/s.
+- **Query kept by default** (only known trackers stripped, to avoid false
+  merges). `group(urls, show_query_sensitivity=True)` returns
+  `{"groups": …, "query_sensitive": [[urls that would merge if the query were
+  dropped], …]}` so you can audit which params actually matter.
+
+## API surface
+
+Network-following (async + a `*_sync` twin; all accept `**engine_kwargs` →
+`Engine(...)`):
+- `are_equivalent(a, b) -> bool`
+- `group(urls, show_query_sensitivity=False) -> dict`
+- `canonical_key(url) -> str` — resolve, then key
+- `resolve(url) -> Resolution(url, endpoint, chain, reachable, error, hops)`
+
+Pure (sync, **no network** — canonicalize the URL as given):
+- `clean_url(url, keep_query=True, keep_fragment=True) -> str` — strip known trackers
+- `key_of(url, options=None, strip_query=False) -> str` — full canonical key as-is
+
+⚠️ **`key_of` (no network) vs `canonical_key` (follows redirects)** is the easy
+mix-up. For "same after redirects," you want `canonical_key`/`are_equivalent`.
+
+`Engine(fetcher=None, store=None, limiter=None, options=None)` — async methods
+`resolve`, `canonical_key(url, strip_query=False)`, `are_equivalent`, `group`,
+`aclose`. Inject a backend via the `Fetcher`/`Store`/`RateLimiter` protocols;
+`FakeFetcher(routes=…, fail=…)` is the deterministic test double.
+
+`Options` defaults: `max_redirects=30, verify_tls=True, timeout=9.0,
+fold_scheme=True, fold_www=True, fold_trailing_slash=True,
+success_ttl=2_592_000, failure_ttl=21_600`.
+
+## Gotchas
+
+- `are_equivalent_sync`/`group_sync` **hit the network** — not pure string ops.
+- Passed-in `store`/`fetcher` → **you** close it, not `aclose()`.
+- `SqliteStore` is **single-process**, no busy timeout — don't run two writers on
+  one cache file (risk `SQLITE_BUSY`, which degrades a link to a best-effort key).
+- Need no-network canonicalization? `key_of`, not `canonical_key`.
+- A host serving an **incomplete TLS chain** fails verification (Python doesn't
+  AIA-fetch missing intermediates) → resolves unreachable. `Options(verify_tls=
+  False)` only if you accept the risk.
+- Predicting whether a re-run hits the network: reachable links land in the
+  `resolved` table, failures as `error` hops — an unreachable link has *no*
+  `resolved` row, so walk its cached hop chain, don't just check `resolved`.
+
+## Links
+
+- Docs: https://stringertheory.github.io/clean-links/
+- Source: https://github.com/stringertheory/clean-links
