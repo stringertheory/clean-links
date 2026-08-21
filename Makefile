@@ -34,7 +34,7 @@ publish: ## publish a release to pypi.
 	@poetry config pypi-token.pypi $(PYPI_TOKEN)
 	@poetry publish --dry-run
 	@echo "🚀 Publishing."
-	@poetry publish
+	@poetry publish --skip-existing
 
 .PHONY: build-and-publish
 build-and-publish: build publish ## Build and publish.

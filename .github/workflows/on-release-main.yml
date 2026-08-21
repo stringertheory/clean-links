@@ -3,7 +3,6 @@ name: release-main
 on:
   release:
     types: [published]
-    branches: [main]
 
 jobs:
   publish:
@@ -39,6 +38,16 @@ jobs:
 
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
+
+      # Persist the mkdocs-material social-card cache (generated cards + the
+      # Google font it downloads) so deploys don't re-fetch the font each time
+      # -- that download is the one step that can flake (zipfile.BadZipFile).
+      - name: Cache mkdocs-material assets
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-material-${{ hashFiles('mkdocs.yml') }}
+          restore-keys: mkdocs-material-
 
       - name: Deploy documentation
         run: poetry run mkdocs gh-deploy --force
