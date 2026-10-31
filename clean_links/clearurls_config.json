@@ -1,7 +1,36 @@
 {
   "providers": {
     "globalRules": {
-      "rules": ["(?:%3F)?utm_(.*)?"]
+      "rules": [
+        "(?:%3F)?utm_(.*)?",
+        "gbraid",
+        "wbraid",
+        "gclsrc",
+        "gad_source",
+        "gad_campaignid",
+        "ttclid",
+        "li_fat_id",
+        "ScCid",
+        "epik",
+        "ndclid",
+        "s_kwcid",
+        "ef_id",
+        "mkwid",
+        "pcrid",
+        "cto_pld",
+        "_branch_match_id",
+        "_bta_tid",
+        "_bta_c",
+        "_hsmi",
+        "_ke",
+        "_kx",
+        "hsa_(?:acc|ad|cam|grp|kw|la|mt|net|ol|src|tgt|ver)",
+        "pk_(?:campaign|cid|content|keyword|kwd|medium|source)",
+        "matomo_(?:campaign|cid|content|group|keyword|medium|placement|source)",
+        "piwik_(?:campaign|keyword|kwd)",
+        "trk_(?:contact|module|msg|sid)",
+        "at_(?:campaign|campaign_type|creation|emailtype|link|link_id|link_origin|link_type|medium|ptr_name|recipient_id|recipient_list|send_date)"
+      ]
     },
     "wired.com": {
       "rules": ["mbid"]
@@ -11,7 +40,121 @@
     },
     "bloomberg": {
       "urlPattern": "^https?:\\/\\/(?:[a-z0-9-]+\\.)*?bloomberg\\.com",
-      "rules": ["cmpid="]
+      "rules": ["cmpid=", "leadSource", "sref", "srnd"]
+    },
+    "amazon": {
+      "rules": [
+        "hvadid",
+        "hvbmt",
+        "hvdev",
+        "hvlocphy",
+        "hvnetw",
+        "hvrand",
+        "hvtargid",
+        "hydadcr",
+        "adgrpid",
+        "creativeId",
+        "linkId",
+        "pageLoadId",
+        "ref_pageloadid",
+        "visitId",
+        "ingress",
+        "store_ref",
+        "sp_csd",
+        "plattr"
+      ]
+    },
+    "ebay": {
+      "rules": [
+        "mkcid",
+        "mkevt",
+        "mkrid",
+        "campid",
+        "customid",
+        "toolid",
+        "amdata",
+        "ssspo",
+        "sssrc",
+        "ssuid"
+      ]
+    },
+    "aliexpress": {
+      "rules": [
+        "aff_fcid",
+        "aff_fsk",
+        "aff_platform",
+        "aff_short_key",
+        "aff_trace_key",
+        "pvid",
+        "utparam",
+        "curPageLogUid"
+      ]
+    },
+    "bbc": {
+      "rules": [
+        "ns_mchannel",
+        "ns_source",
+        "ns_campaign",
+        "ns_linkname",
+        "ns_fee",
+        "ocid",
+        "facebook_page"
+      ]
+    },
+    "etsy.com": {
+      "rules": ["ref"]
+    },
+    "reddit": {
+      "rules": ["ref"]
+    },
+    "instagram": {
+      "rules": ["ig_rid"]
+    },
+    "LinkedIn": {
+      "rules": ["rcm"]
+    },
+    "twitter": {
+      "rules": ["cxt"]
+    },
+    "facebook": {
+      "rules": ["extid"]
+    },
+    "tiktok.com": {
+      "rules": [
+        "share_app_id",
+        "share_author_id",
+        "tt_from",
+        "embed_source",
+        "referer_url",
+        "refer",
+        "is_from_webapp",
+        "sender_device",
+        "web_id",
+        "enter_method"
+      ]
+    },
+    "wsj": {
+      "urlPattern": "^https?://(?:[a-z0-9-]+\\.)*?wsj\\.com(?:[:/?#]|$)",
+      "rules": ["reflink"]
+    },
+    "cnn": {
+      "urlPattern": "^https?://(?:[a-z0-9-]+\\.)*?cnn\\.(?:com|co\\.jp)(?:[:/?#]|$)",
+      "rules": ["ref"]
+    },
+    "mirror.co.uk": {
+      "urlPattern": "^https?://(?:[a-z0-9-]+\\.)*?mirror\\.co\\.uk(?:[:/?#]|$)",
+      "rules": ["int_source"]
+    },
+    "theathletic": {
+      "urlPattern": "^https?://(?:[a-z0-9-]+\\.)*?theathletic\\.com(?:[:/?#]|$)",
+      "rules": ["source"]
+    },
+    "twitch": {
+      "urlPattern": "^https?://(?:[a-z0-9-]+\\.)*?twitch\\.(?:tv|com)(?:[:/?#]|$)"
+    },
+    "wikimedia": {
+      "urlPattern": "^https?://(?:[a-z0-9-]+\\.)*?(?:wikipedia\\.org|wikimedia\\.org|mediawiki\\.org|wikidata\\.org|wikifunctions\\.org|w\\.wiki)(?:[:/?#]|$)",
+      "rules": ["wprov"]
     }
   }
 }

@@ -63,3 +63,13 @@ def test_ipv6_default_port_folded():
     assert canonical_key("https://[2001:db8::1]:443/a") == canonical_key(
         "https://[2001:db8::1]/a"
     )
+
+
+def test_google_ads_click_ids_merge():
+    # Same article reached via different ad clicks is one Resource.
+    plain = canonical_key("https://news.example.com/story?id=9")
+    for tracked in [
+        "https://news.example.com/story?id=9&gbraid=0AAAA&gad_source=1",
+        "https://news.example.com/story?wbraid=CkQ&id=9",
+    ]:
+        assert canonical_key(tracked) == plain

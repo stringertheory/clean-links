@@ -80,7 +80,9 @@ requests per host and is polite by default.
 
 `clean-links` strips only _known_ tracking parameters and keeps
 everything else, so it avoids wrongly merging two different resources
-into one. To find the cases where a query parameter is the only thing
+into one. "Known" means the [ClearURLs](https://docs.clearurls.xyz/)
+ruleset plus a hand-picked set of extra tracking IDs taken from Firefox's
+"Copy Clean Link" lists. To find the cases where a query parameter is the only thing
 making different groups, use `group` with "sensitivity":
 
 ```pycon
