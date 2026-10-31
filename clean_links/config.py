@@ -57,6 +57,15 @@ def read_config(
     for provider_name, rules in additional_rules["providers"].items():
         provider = clear_urls_rules["providers"].get(provider_name)
         if not provider:
+            if not rules.get("urlPattern"):
+                msg = (
+                    f"{additional_config_filename} extends provider "
+                    f"{provider_name!r}, which is not in clearurls.json "
+                    "(renamed or removed upstream?) and has no urlPattern "
+                    "of its own. Rename the entry to match the current "
+                    "ClearURLs provider, or give it a urlPattern."
+                )
+                raise ValueError(msg)
             clear_urls_rules["providers"][provider_name] = {
                 "urlPattern": None,
                 "completeProvider": False,
