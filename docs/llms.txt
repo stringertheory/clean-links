@@ -3,7 +3,7 @@
 > Decide whether two links point at the same **Resource** (the page a person
 > would call "the same thing"), so shared links can be de-duplicated and counted.
 > It follows redirects to each link's final URL, strips known tracking params
-> (ClearURLs), and compares what's left. Async-first, optional persistent cache.
+> (ClearURLs + curated extras), and compares what's left. Async-first, optional persistent cache.
 
 For coding agents **integrating** clean-links into their own code. `import
 clean_links` (PyPI `clean_links`). Short and self-contained — safe to read in
@@ -66,6 +66,10 @@ is also left open — use an explicit `Engine` for a persistent cache.)
 - **Caching:** a reachable resolution is reused for `success_ttl` (30 d); a
   failure is negatively cached for `failure_ttl` (6 h) then retried — so a
   transiently-down or blocked host recovers on a later run by itself.
+- **Keys are never served stale.** The cache holds where a link *ends up*; its
+  key is recomputed on every lookup under the current rules and `Options`
+  (cheap, no network). Upgrading clean-links or changing `Options` applies to
+  already-cached links at once — no cache clearing or re-crawl needed.
 - **Failures never raise inside `group`/`canonical_key`.** An unreachable link
   gets a best-effort key from the deepest URL seen (bias to **false-split**): it
   forms its own bucket instead of wrongly merging. Corollary — a duplicate

@@ -173,17 +173,21 @@ class Engine:
 
     async def _resolve_endpoint(self, url: str) -> tuple[str, str]:
         """Return ``(endpoint, canonical key)`` for ``url``. A fresh
-        resolved-cache entry is served as-is -- not re-resolved and not
-        re-stamped, so success_ttl does not slide on every access. A new
+        resolved-cache entry's Endpoint is served as-is -- not re-resolved
+        and not re-stamped, so success_ttl does not slide on every access.
+        The key is always recomputed from that Endpoint under the current
+        policy (cheap, no network), never read back from the cache, so a
+        cleaning-rule or Options change applies to cached links at once. A new
         resolution is memoized only when reachable: an unreachable best-effort
         key would otherwise be pinned for success_ttl and never retried after
         the site recovers (the underlying hops still expire under failure_ttl,
         so re-resolving picks up the recovery)."""
         cached = await self.store.get_resolved(url)
         if cached is not None:
-            endpoint, key, fetched_at = cached
+            endpoint, _stale_key, fetched_at = cached
             if time.time() - fetched_at < self.options.success_ttl:
-                return str(endpoint), str(key)
+                endpoint = str(endpoint)
+                return endpoint, _key_of(endpoint, self.options)
         resolution = await self.resolve(url)
         endpoint = resolution.endpoint
         key = _key_of(endpoint, self.options)

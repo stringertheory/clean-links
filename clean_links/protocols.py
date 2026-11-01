@@ -12,6 +12,11 @@ class Fetcher(Protocol):
 
 
 class Store(Protocol):
+    """``hop`` records are the source of truth; ``resolved`` memoizes
+    URL -> Endpoint. The ``key`` passed to ``put_resolved`` is informational:
+    the Engine recomputes keys from the Endpoint and never reads it back, so
+    a store may persist it or not (but must return a 3-tuple)."""
+
     async def get_hop(self, url: str) -> tuple | None: ...
 
     async def put_hop(

@@ -241,3 +241,21 @@ def test_group_survives_one_malformed_port_endpoint():
     )
     merged = [members for members in groups.values() if len(members) > 1]
     assert merged == [["https://bit.ly/ok1", "https://bit.ly/ok2"]]
+
+
+def test_cached_key_recomputed_under_current_policy():
+    # The resolved cache memoizes the Endpoint, not the policy's verdict: a
+    # key stored under older cleaning rules (or other Options) must not be
+    # served back. Recomputing it needs no fetch.
+    store = InMemoryStore()
+    endpoint = "https://news.com/a?gbraid=0AAAA"
+    run(
+        store.put_resolved(
+            "https://bit.ly/x", endpoint, "stale-key", time.time()
+        )
+    )
+    fetcher = FakeFetcher()
+    eng = engine(fetcher, store=store)
+    key = run(eng.canonical_key("https://bit.ly/x"))
+    assert key == run(eng.canonical_key("https://news.com/a"))
+    assert [url for url, _ in fetcher.calls] == ["https://news.com/a"]

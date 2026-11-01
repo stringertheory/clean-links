@@ -1,8 +1,11 @@
 """Persistence: the redirect graph as a cache.
 
 ``hop`` is the source of truth -- raw network observations (from-URL ->
-to-URL, status). ``resolved`` is a derived memo (URL -> Endpoint + Canonical
-key) that can be recomputed from hops plus the policy without re-crawling.
+to-URL, status). ``resolved`` is a derived memo (URL -> Endpoint) that can be
+rebuilt from hops without re-crawling. Its ``key`` column records the key
+computed at write time, for inspection only: the Engine never reads it back
+and always recomputes the key from the Endpoint under the current policy,
+so new cleaning rules or Options apply to cached links immediately.
 Two implementations behind one interface: in-memory (default) and SQLite.
 
 Records are plain tuples:

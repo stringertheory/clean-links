@@ -73,7 +73,9 @@ across runs by giving the `Engine` a SQLite-backed store:
 ```
 
 Re-running the same link, even in a different process, is served from
-the cache without another network request. The `Engine` also throttles
+the cache without another network request. Only where each link ends
+up is cached; its key is recomputed every time, so improved cleaning
+rules in a new release apply to links you've already cached. The `Engine` also throttles
 requests per host and is polite by default.
 
 ## Tune the policy for your data
